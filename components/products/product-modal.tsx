@@ -1,0 +1,308 @@
+"use client";
+
+import { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { productSchema, ProductFormValues } from "@/lib/validations/product";
+
+import { Product, UNIT_TYPES } from "@/types/product";
+
+import { Category } from "@/types/category";
+import { SubCategory } from "@/types/sub-category";
+
+interface ProductModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+
+  product?: Product;
+
+  categories: Category[];
+  subCategories: SubCategory[];
+
+  onSubmit: (values: ProductFormValues) => Promise<void>;
+}
+
+export function ProductModal({
+  open,
+  onOpenChange,
+  product,
+  categories,
+  subCategories,
+  onSubmit,
+}: ProductModalProps) {
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+
+    defaultValues: {
+      name: "",
+      brand: "",
+      category_id: "",
+      sub_category_id: "",
+      unit_type: "",
+      low_stock_limit: 0,
+      status: "ACTIVE",
+    },
+  });
+
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        name: product.name,
+        brand: product.brand ?? "",
+        category_id: product.category_id,
+        sub_category_id: product.sub_category_id,
+        unit_type: product.unit_type,
+        low_stock_limit: product.low_stock_limit,
+        status: product.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+      });
+    } else {
+      form.reset({
+        name: "",
+        brand: "",
+        category_id: "",
+        sub_category_id: "",
+        unit_type: "",
+        low_stock_limit: 0,
+        status: "ACTIVE",
+      });
+    }
+  }, [product, form]);
+
+  const selectedCategoryId = useWatch({
+    control: form.control,
+    name: "category_id",
+  });
+
+  const filteredSubCategories = subCategories.filter(
+    (subCategory) => subCategory.category_id === selectedCategoryId,
+  );
+
+  const handleSubmit = async (values: ProductFormValues) => {
+    await onSubmit(values);
+
+    form.reset();
+
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Name</FormLabel>
+
+                  <FormControl>
+                    <Input placeholder="Product Name" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brand</FormLabel>
+
+                  <FormControl>
+                    <Input placeholder="Brand" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="sub_category_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sub Category</FormLabel>
+
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Sub Category" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {filteredSubCategories.map((subCategory) => (
+                        <SelectItem key={subCategory.id} value={subCategory.id}>
+                          {subCategory.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="unit_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit Type</FormLabel>
+
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Unit Type" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {UNIT_TYPES.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="low_stock_limit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Low Stock Limit</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      type="number"
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value="ACTIVE">Active</SelectItem>
+
+                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
+
+              <Button type="submit">
+                {product ? "Update Product" : "Create Product"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
