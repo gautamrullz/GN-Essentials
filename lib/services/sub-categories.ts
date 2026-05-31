@@ -8,13 +8,15 @@ import {
 export async function getSubCategories() {
   const { data, error } = await supabase
     .from("sub_categories")
-    .select(`
+    .select(
+      `
       *,
       categories (
         id,
         name
       )
-    `)
+    `,
+    )
     .order("name");
 
   if (error) {
@@ -24,9 +26,7 @@ export async function getSubCategories() {
   return data;
 }
 
-export async function createSubCategory(
-  payload: CreateSubCategoryInput
-) {
+export async function createSubCategory(payload: CreateSubCategoryInput) {
   const { data, error } = await supabase
     .from("sub_categories")
     .insert({
@@ -43,9 +43,7 @@ export async function createSubCategory(
   return data;
 }
 
-export async function updateSubCategory(
-  payload: UpdateSubCategoryInput
-) {
+export async function updateSubCategory(payload: UpdateSubCategoryInput) {
   const { data, error } = await supabase
     .from("sub_categories")
     .update({
@@ -63,13 +61,8 @@ export async function updateSubCategory(
   return data;
 }
 
-export async function deleteSubCategory(
-  id: string
-) {
-  const { error } = await supabase
-    .from("sub_categories")
-    .delete()
-    .eq("id", id);
+export async function deleteSubCategory(id: string) {
+  const { error } = await supabase.from("sub_categories").delete().eq("id", id);
 
   if (error) {
     throw error;

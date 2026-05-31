@@ -23,10 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import {
-  categorySchema,
-  CategoryFormValues,
-} from "@/lib/validations/category";
+import { categorySchema, CategoryFormValues } from "@/lib/validations/category";
 
 import { Category } from "@/types/category";
 
@@ -34,9 +31,7 @@ interface CategoryModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   category?: Category;
-  onSubmit: (
-    values: CategoryFormValues
-  ) => Promise<void>;
+  onSubmit: (values: CategoryFormValues) => Promise<void>;
 }
 
 export function CategoryModal({
@@ -64,9 +59,7 @@ export function CategoryModal({
     }
   }, [category, form]);
 
-  const handleSubmit = async (
-    values: CategoryFormValues
-  ) => {
+  const handleSubmit = async (values: CategoryFormValues) => {
     await onSubmit(values);
 
     form.reset();
@@ -75,24 +68,17 @@ export function CategoryModal({
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {category
-              ? "Edit Category"
-              : "Add Category"}
+            {category ? "Edit Category" : "Add Category"}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(
-              handleSubmit
-            )}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
             <FormField
@@ -100,15 +86,10 @@ export function CategoryModal({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Category Name
-                  </FormLabel>
+                  <FormLabel>Category Name</FormLabel>
 
                   <FormControl>
-                    <Input
-                      placeholder="Category name"
-                      {...field}
-                    />
+                    <Input placeholder="Category name" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -120,17 +101,13 @@ export function CategoryModal({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
-                  onOpenChange(false)
-                }
+                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
 
               <Button type="submit">
-                {category
-                  ? "Update Category"
-                  : "Create Category"}
+                {category ? "Update Category" : "Create Category"}
               </Button>
             </div>
           </form>

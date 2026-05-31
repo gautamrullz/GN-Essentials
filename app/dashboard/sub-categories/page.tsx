@@ -36,35 +36,27 @@ import { SubCategory, SubCategoryWithCategory } from "@/types/sub-category";
 import { SubCategoryFormValues } from "@/lib/validations/sub-category";
 
 export default function SubCategoriesPage() {
-  const [subCategories, setSubCategories] =
-    useState<SubCategoryWithCategory[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategoryWithCategory[]>(
+    [],
+  );
 
-  const [categories, setCategories] =
-    useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState<SubCategory>();
+  const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategory>();
 
   async function loadData() {
-    const [subCategoryData, categoryData] =
-      await Promise.all([
-        getSubCategories(),
-        getCategories(),
-      ]);
+    const [subCategoryData, categoryData] = await Promise.all([
+      getSubCategories(),
+      getCategories(),
+    ]);
 
-    setSubCategories(
-      subCategoryData ?? []
-    );
+    setSubCategories(subCategoryData ?? []);
 
-    setCategories(
-      categoryData ?? []
-    );
+    setCategories(categoryData ?? []);
   }
 
   useEffect(() => {
@@ -75,9 +67,7 @@ export default function SubCategoriesPage() {
     void fetchData();
   }, []);
 
-  async function handleSubmit(
-    values: SubCategoryFormValues
-  ) {
+  async function handleSubmit(values: SubCategoryFormValues) {
     try {
       if (selectedSubCategory) {
         await updateSubCategory({
@@ -85,66 +75,38 @@ export default function SubCategoriesPage() {
           ...values,
         });
 
-        toast.success(
-          "Sub Category updated successfully"
-        );
+        toast.success("Sub Category updated successfully");
       } else {
-        await createSubCategory(
-          values
-        );
+        await createSubCategory(values);
 
-        toast.success(
-          "Sub Category created successfully"
-        );
+        toast.success("Sub Category created successfully");
       }
 
       await loadData();
 
-      setSelectedSubCategory(
-        undefined
-      );
+      setSelectedSubCategory(undefined);
     } catch {
-      toast.error(
-        "Failed to save Sub Category"
-      );
+      toast.error("Failed to save Sub Category");
     }
   }
 
-  async function handleDelete(
-    subCategory: SubCategory
-  ) {
-    const confirmed =
-      window.confirm(
-        `Delete ${subCategory.name}?`
-      );
+  async function handleDelete(subCategory: SubCategory) {
+    const confirmed = window.confirm(`Delete ${subCategory.name}?`);
 
     if (!confirmed) return;
 
-    await deleteSubCategory(
-      subCategory.id
-    );
+    await deleteSubCategory(subCategory.id);
 
-    toast.success(
-      "Sub Category deleted successfully"
-    );
+    toast.success("Sub Category deleted successfully");
 
     await loadData();
   }
 
-  const filteredSubCategories =
-    subCategories.filter(
-      (item) =>
-        item.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        item.categories?.name
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          )
-    );
+  const filteredSubCategories = subCategories.filter(
+    (item) =>
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.categories?.name?.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <>
@@ -154,9 +116,7 @@ export default function SubCategoriesPage() {
         action={
           <Button
             onClick={() => {
-              setSelectedSubCategory(
-                undefined
-              );
+              setSelectedSubCategory(undefined);
               setOpen(true);
             }}
           >
@@ -169,11 +129,7 @@ export default function SubCategoriesPage() {
         <Input
           placeholder="Search..."
           value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -181,81 +137,52 @@ export default function SubCategoriesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                Category
-              </TableHead>
+              <TableHead>Category</TableHead>
 
-              <TableHead>
-                Sub Category
-              </TableHead>
+              <TableHead>Sub Category</TableHead>
 
-              <TableHead>
-                Actions
-              </TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filteredSubCategories.length ===
-            0 ? (
+            {filteredSubCategories.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={3}
-                >
+                <TableCell colSpan={3}>
                   <EmptyState title="No sub categories found" />
                 </TableCell>
               </TableRow>
             ) : (
-              filteredSubCategories.map(
-                (item) => (
-                  <TableRow
-                    key={item.id}
-                  >
-                    <TableCell>
-                      {
-                        item
-                          .categories
-                          ?.name
-                      }
-                    </TableCell>
+              filteredSubCategories.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.categories?.name}</TableCell>
 
-                    <TableCell>
-                      {item.name}
-                    </TableCell>
+                  <TableCell>{item.name}</TableCell>
 
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedSubCategory(
-                              item
-                            );
-                            setOpen(
-                              true
-                            );
-                          }}
-                        >
-                          Edit
-                        </Button>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedSubCategory(item);
+                          setOpen(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
 
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() =>
-                            handleDelete(
-                              item
-                            )
-                          }
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )
-              )
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(item)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>
@@ -264,9 +191,7 @@ export default function SubCategoriesPage() {
       <SubCategoryModal
         open={open}
         onOpenChange={setOpen}
-        subCategory={
-          selectedSubCategory
-        }
+        subCategory={selectedSubCategory}
         categories={categories}
         onSubmit={handleSubmit}
       />

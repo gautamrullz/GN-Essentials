@@ -27,31 +27,18 @@ export function DeleteDialog({
   description,
 }: DeleteDialogProps) {
   return (
-    <AlertDialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {title}
-          </AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
 
-          <AlertDialogDescription>
-            {description}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-          <AlertDialogAction
-            onClick={onConfirm}
-          >
-            Delete
-          </AlertDialogAction>
+          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

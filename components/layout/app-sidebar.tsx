@@ -11,9 +11,7 @@ export function AppSidebar() {
   return (
     <aside className="w-64 border-r bg-background">
       <div className="p-6">
-        <h2 className="font-bold text-xl">
-          GN Essentials
-        </h2>
+        <h2 className="font-bold text-xl">GN Essentials</h2>
       </div>
 
       <nav className="space-y-6 px-3">
@@ -35,7 +33,7 @@ export function AppSidebar() {
                       "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                       pathname === item.href
                         ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
+                        : "hover:bg-muted",
                     )}
                   >
                     <Icon className="h-4 w-4" />

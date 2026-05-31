@@ -31,10 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  BatchFormValues,
-  batchSchema,
-} from "@/lib/validations/batch";
+import { BatchFormValues, batchSchema } from "@/lib/validations/batch";
 
 import { Batch } from "@/types/batch";
 import { Product } from "@/types/product";
@@ -46,9 +43,7 @@ interface BatchModalProps {
   batch?: Batch;
   products: Product[];
   suppliers: Supplier[];
-  onSubmit: (
-    values: BatchFormValues
-  ) => Promise<void>;
+  onSubmit: (values: BatchFormValues) => Promise<void>;
 }
 
 export function BatchModal({
@@ -81,29 +76,18 @@ export function BatchModal({
         product_id: batch.product_id,
         supplier_id: batch.supplier_id,
         batch_number: batch.batch_number,
-        manufacture_date:
-          batch.manufacture_date,
-        purchase_date:
-          batch.purchase_date,
-        expiry_date:
-          batch.expiry_date,
+        manufacture_date: batch.manufacture_date,
+        purchase_date: batch.purchase_date,
+        expiry_date: batch.expiry_date,
         quantity: batch.quantity,
-        purchase_price:
-          batch.purchase_price,
-        selling_price:
-          batch.selling_price,
-        status:
-          batch.status ===
-          "INACTIVE"
-            ? "INACTIVE"
-            : "ACTIVE",
+        purchase_price: batch.purchase_price,
+        selling_price: batch.selling_price,
+        status: batch.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
       });
     }
   }, [batch, form]);
 
-  async function handleSave(
-    values: BatchFormValues
-  ) {
+  async function handleSave(values: BatchFormValues) {
     await onSubmit(values);
 
     form.reset();
@@ -112,41 +96,22 @@ export function BatchModal({
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            {batch
-              ? "Edit Batch"
-              : "Add Batch"}
-          </DialogTitle>
+          <DialogTitle>{batch ? "Edit Batch" : "Add Batch"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              handleSave
-            )}
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
             <FormField
               control={form.control}
               name="product_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Product
-                  </FormLabel>
+                  <FormLabel>Product</FormLabel>
 
-                  <Select
-                    value={field.value}
-                    onValueChange={
-                      field.onChange
-                    }
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select Product" />
@@ -154,22 +119,11 @@ export function BatchModal({
                     </FormControl>
 
                     <SelectContent>
-                      {products.map(
-                        (product) => (
-                          <SelectItem
-                            key={
-                              product.id
-                            }
-                            value={
-                              product.id
-                            }
-                          >
-                            {
-                              product.name
-                            }
-                          </SelectItem>
-                        )
-                      )}
+                      {products.map((product) => (
+                        <SelectItem key={product.id} value={product.id}>
+                          {product.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -183,16 +137,9 @@ export function BatchModal({
               name="supplier_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Supplier
-                  </FormLabel>
+                  <FormLabel>Supplier</FormLabel>
 
-                  <Select
-                    value={field.value}
-                    onValueChange={
-                      field.onChange
-                    }
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select Supplier" />
@@ -200,22 +147,11 @@ export function BatchModal({
                     </FormControl>
 
                     <SelectContent>
-                      {suppliers.map(
-                        (supplier) => (
-                          <SelectItem
-                            key={
-                              supplier.id
-                            }
-                            value={
-                              supplier.id
-                            }
-                          >
-                            {
-                              supplier.name
-                            }
-                          </SelectItem>
-                        )
-                      )}
+                      {suppliers.map((supplier) => (
+                        <SelectItem key={supplier.id} value={supplier.id}>
+                          {supplier.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -229,14 +165,10 @@ export function BatchModal({
               name="batch_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Batch Number
-                  </FormLabel>
+                  <FormLabel>Batch Number</FormLabel>
 
                   <FormControl>
-                    <Input
-                      {...field}
-                    />
+                    <Input {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -248,31 +180,15 @@ export function BatchModal({
               <FormField
                 control={form.control}
                 name="quantity"
-                render={({
-                  field,
-                }) => (
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Quantity
-                    </FormLabel>
+                    <FormLabel>Quantity</FormLabel>
 
                     <FormControl>
                       <Input
                         type="number"
-                        value={
-                          field.value
-                        }
-                        onChange={(
-                          e
-                        ) =>
-                          field.onChange(
-                            Number(
-                              e
-                                .target
-                                .value
-                            )
-                          )
-                        }
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
 
@@ -284,31 +200,15 @@ export function BatchModal({
               <FormField
                 control={form.control}
                 name="purchase_price"
-                render={({
-                  field,
-                }) => (
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Purchase Price
-                    </FormLabel>
+                    <FormLabel>Purchase Price</FormLabel>
 
                     <FormControl>
                       <Input
                         type="number"
-                        value={
-                          field.value
-                        }
-                        onChange={(
-                          e
-                        ) =>
-                          field.onChange(
-                            Number(
-                              e
-                                .target
-                                .value
-                            )
-                          )
-                        }
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
 
@@ -320,31 +220,15 @@ export function BatchModal({
               <FormField
                 control={form.control}
                 name="selling_price"
-                render={({
-                  field,
-                }) => (
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Selling Price
-                    </FormLabel>
+                    <FormLabel>Selling Price</FormLabel>
 
                     <FormControl>
                       <Input
                         type="number"
-                        value={
-                          field.value
-                        }
-                        onChange={(
-                          e
-                        ) =>
-                          field.onChange(
-                            Number(
-                              e
-                                .target
-                                .value
-                            )
-                          )
-                        }
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
 
@@ -360,14 +244,9 @@ export function BatchModal({
                 name="manufacture_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Manufacture Date
-                    </FormLabel>
+                    <FormLabel>Manufacture Date</FormLabel>
 
-                    <Input
-                      type="date"
-                      {...field}
-                    />
+                    <Input type="date" {...field} />
 
                     <FormMessage />
                   </FormItem>
@@ -379,14 +258,9 @@ export function BatchModal({
                 name="purchase_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Purchase Date
-                    </FormLabel>
+                    <FormLabel>Purchase Date</FormLabel>
 
-                    <Input
-                      type="date"
-                      {...field}
-                    />
+                    <Input type="date" {...field} />
 
                     <FormMessage />
                   </FormItem>
@@ -398,14 +272,9 @@ export function BatchModal({
                 name="expiry_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Expiry Date
-                    </FormLabel>
+                    <FormLabel>Expiry Date</FormLabel>
 
-                    <Input
-                      type="date"
-                      {...field}
-                    />
+                    <Input type="date" {...field} />
 
                     <FormMessage />
                   </FormItem>
@@ -418,16 +287,9 @@ export function BatchModal({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Status
-                  </FormLabel>
+                  <FormLabel>Status</FormLabel>
 
-                  <Select
-                    value={field.value}
-                    onValueChange={
-                      field.onChange
-                    }
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue />
@@ -435,13 +297,9 @@ export function BatchModal({
                     </FormControl>
 
                     <SelectContent>
-                      <SelectItem value="ACTIVE">
-                        Active
-                      </SelectItem>
+                      <SelectItem value="ACTIVE">Active</SelectItem>
 
-                      <SelectItem value="INACTIVE">
-                        Inactive
-                      </SelectItem>
+                      <SelectItem value="INACTIVE">Inactive</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -454,16 +312,12 @@ export function BatchModal({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
-                  onOpenChange(false)
-                }
+                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
 
-              <Button type="submit">
-                Save Batch
-              </Button>
+              <Button type="submit">Save Batch</Button>
             </div>
           </form>
         </Form>

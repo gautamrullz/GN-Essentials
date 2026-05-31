@@ -13,8 +13,7 @@ export interface Batch {
   created_at: string;
 }
 
-export interface BatchWithRelations
-  extends Batch {
+export interface BatchWithRelations extends Batch {
   products: {
     id: string;
     name: string;
@@ -39,7 +38,6 @@ export type CreateBatchInput = {
   status: string;
 };
 
-export type UpdateBatchInput =
-  CreateBatchInput & {
-    id: string;
-  };
+export type UpdateBatchInput = CreateBatchInput & {
+  id: string;
+};

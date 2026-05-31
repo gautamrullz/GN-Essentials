@@ -5,10 +5,10 @@ import { InventoryTransactionWithRelations } from "@/types/transaction";
 export async function getTransactions(): Promise<
   InventoryTransactionWithRelations[]
 > {
-  const { data, error } =
-    await supabase
-      .from("inventory_transactions")
-      .select(`
+  const { data, error } = await supabase
+    .from("inventory_transactions")
+    .select(
+      `
         *,
         products (
           id,
@@ -18,16 +18,15 @@ export async function getTransactions(): Promise<
           id,
           batch_number
         )
-      `)
-      .order("created_at", {
-        ascending: false,
-      });
+      `,
+    )
+    .order("created_at", {
+      ascending: false,
+    });
 
   if (error) {
     throw error;
   }
 
-  return (
-    data as InventoryTransactionWithRelations[]
-  );
+  return data as InventoryTransactionWithRelations[];
 }

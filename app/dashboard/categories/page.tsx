@@ -39,11 +39,9 @@ export default function CategoriesPage() {
 
   const [search, setSearch] = useState("");
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<Category>();
+  const [selectedCategory, setSelectedCategory] = useState<Category>();
 
-  const [deletingId, setDeletingId] =
-    useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function loadCategories() {
     const data = await getCategories();
@@ -59,9 +57,7 @@ export default function CategoriesPage() {
     void fetchData();
   }, []);
 
-  async function handleSubmit(
-    values: CategoryFormValues
-  ) {
+  async function handleSubmit(values: CategoryFormValues) {
     try {
       if (selectedCategory) {
         await updateCategory({
@@ -69,15 +65,11 @@ export default function CategoriesPage() {
           ...values,
         });
 
-        toast.success(
-          "Category updated successfully"
-        );
+        toast.success("Category updated successfully");
       } else {
         await createCategory(values);
 
-        toast.success(
-          "Category created successfully"
-        );
+        toast.success("Category created successfully");
       }
 
       await loadCategories();
@@ -86,18 +78,12 @@ export default function CategoriesPage() {
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        "Failed to save category"
-      );
+      toast.error("Failed to save category");
     }
   }
 
-  async function handleDelete(
-    category: Category
-  ) {
-    const confirmed = window.confirm(
-      `Delete ${category.name}?`
-    );
+  async function handleDelete(category: Category) {
+    const confirmed = window.confirm(`Delete ${category.name}?`);
 
     if (!confirmed) {
       return;
@@ -108,17 +94,13 @@ export default function CategoriesPage() {
 
       await deleteCategory(category.id);
 
-      toast.success(
-        "Category deleted successfully"
-      );
+      toast.success("Category deleted successfully");
 
       await loadCategories();
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        "Failed to delete category"
-      );
+      toast.error("Failed to delete category");
     } finally {
       setDeletingId(null);
     }
@@ -130,42 +112,29 @@ export default function CategoriesPage() {
     setOpen(true);
   }
 
-  function handleEditCategory(
-    category: Category
-  ) {
+  function handleEditCategory(category: Category) {
     setSelectedCategory(category);
 
     setOpen(true);
   }
 
-  const filteredCategories =
-    categories.filter((category) =>
-      category.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    );
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <>
       <PageHeader
         title="Categories"
         description="Manage product categories"
-        action={
-          <Button
-            onClick={handleAddCategory}
-          >
-            Add Category
-          </Button>
-        }
+        action={<Button onClick={handleAddCategory}>Add Category</Button>}
       />
 
       <div className="mb-4">
         <Input
           placeholder="Search categories..."
           value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -173,70 +142,46 @@ export default function CategoriesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                Name
-              </TableHead>
+              <TableHead>Name</TableHead>
 
-              <TableHead>
-                Actions
-              </TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filteredCategories.length ===
-            0 ? (
+            {filteredCategories.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={2}
-                >
+                <TableCell colSpan={2}>
                   <EmptyState title="No categories found" />
                 </TableCell>
               </TableRow>
             ) : (
-              filteredCategories.map(
-                (category) => (
-                  <TableRow
-                    key={category.id}
-                  >
-                    <TableCell>
-                      {category.name}
-                    </TableCell>
+              filteredCategories.map((category) => (
+                <TableRow key={category.id}>
+                  <TableCell>{category.name}</TableCell>
 
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() =>
-                            handleEditCategory(
-                              category
-                            )
-                          }
-                        >
-                          Edit
-                        </Button>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditCategory(category)}
+                      >
+                        Edit
+                      </Button>
 
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled={
-                            deletingId ===
-                            category.id
-                          }
-                          onClick={() =>
-                            handleDelete(
-                              category
-                            )
-                          }
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )
-              )
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={deletingId === category.id}
+                        onClick={() => handleDelete(category)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

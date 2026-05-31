@@ -1,9 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 
-import {
-  CreateCategoryInput,
-  UpdateCategoryInput,
-} from "@/types/category";
+import { CreateCategoryInput, UpdateCategoryInput } from "@/types/category";
 
 export async function getCategories() {
   const { data, error } = await supabase
@@ -18,9 +15,7 @@ export async function getCategories() {
   return data;
 }
 
-export async function createCategory(
-  payload: CreateCategoryInput
-) {
+export async function createCategory(payload: CreateCategoryInput) {
   const { data, error } = await supabase
     .from("categories")
     .insert({
@@ -36,9 +31,7 @@ export async function createCategory(
   return data;
 }
 
-export async function updateCategory(
-  payload: UpdateCategoryInput
-) {
+export async function updateCategory(payload: UpdateCategoryInput) {
   const { data, error } = await supabase
     .from("categories")
     .update({
@@ -55,13 +48,8 @@ export async function updateCategory(
   return data;
 }
 
-export async function deleteCategory(
-  id: string
-) {
-  const { error } = await supabase
-    .from("categories")
-    .delete()
-    .eq("id", id);
+export async function deleteCategory(id: string) {
+  const { error } = await supabase.from("categories").delete().eq("id", id);
 
   if (error) {
     throw error;

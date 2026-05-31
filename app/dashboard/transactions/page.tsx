@@ -21,17 +21,14 @@ import { getTransactions } from "@/lib/services/transactions";
 import { InventoryTransactionWithRelations } from "@/types/transaction";
 
 export default function TransactionsPage() {
-  const [transactions, setTransactions] =
-    useState<
-      InventoryTransactionWithRelations[]
-    >([]);
+  const [transactions, setTransactions] = useState<
+    InventoryTransactionWithRelations[]
+  >([]);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
   async function loadData() {
-    const data =
-      await getTransactions();
+    const data = await getTransactions();
 
     setTransactions(data ?? []);
   }
@@ -44,20 +41,13 @@ export default function TransactionsPage() {
     void fetchData();
   }, []);
 
-  const filteredTransactions =
-    transactions.filter(
-      (transaction) =>
-        transaction.transaction_type
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        transaction.products?.name
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          )
-    );
+  const filteredTransactions = transactions.filter(
+    (transaction) =>
+      transaction.transaction_type
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      transaction.products?.name?.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <>
@@ -70,11 +60,7 @@ export default function TransactionsPage() {
         <Input
           placeholder="Search..."
           value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -82,94 +68,45 @@ export default function TransactionsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                Product
-              </TableHead>
+              <TableHead>Product</TableHead>
 
-              <TableHead>
-                Batch
-              </TableHead>
+              <TableHead>Batch</TableHead>
 
-              <TableHead>
-                Type
-              </TableHead>
+              <TableHead>Type</TableHead>
 
-              <TableHead>
-                Quantity
-              </TableHead>
+              <TableHead>Quantity</TableHead>
 
-              <TableHead>
-                Notes
-              </TableHead>
+              <TableHead>Notes</TableHead>
 
-              <TableHead>
-                Date
-              </TableHead>
+              <TableHead>Date</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filteredTransactions.length ===
-            0 ? (
+            {filteredTransactions.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={6}
-                >
+                <TableCell colSpan={6}>
                   <EmptyState title="No transactions found" />
                 </TableCell>
               </TableRow>
             ) : (
-              filteredTransactions.map(
-                (
-                  transaction
-                ) => (
-                  <TableRow
-                    key={
-                      transaction.id
-                    }
-                  >
-                    <TableCell>
-                      {
-                        transaction
-                          .products
-                          ?.name
-                      }
-                    </TableCell>
+              filteredTransactions.map((transaction) => (
+                <TableRow key={transaction.id}>
+                  <TableCell>{transaction.products?.name}</TableCell>
 
-                    <TableCell>
-                      {
-                        transaction
-                          .batches
-                          ?.batch_number
-                      }
-                    </TableCell>
+                  <TableCell>{transaction.batches?.batch_number}</TableCell>
 
-                    <TableCell>
-                      {
-                        transaction.transaction_type
-                      }
-                    </TableCell>
+                  <TableCell>{transaction.transaction_type}</TableCell>
 
-                    <TableCell>
-                      {
-                        transaction.quantity
-                      }
-                    </TableCell>
+                  <TableCell>{transaction.quantity}</TableCell>
 
-                    <TableCell>
-                      {
-                        transaction.notes
-                      }
-                    </TableCell>
+                  <TableCell>{transaction.notes}</TableCell>
 
-                    <TableCell>
-                      {new Date(
-                        transaction.created_at
-                      ).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                )
-              )
+                  <TableCell>
+                    {new Date(transaction.created_at).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

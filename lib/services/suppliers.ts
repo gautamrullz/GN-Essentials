@@ -1,4 +1,3 @@
-
 import { CreateSupplierInput, UpdateSupplierInput } from "@/types/supplier";
 import { supabase } from "@/lib/supabase/client";
 
@@ -15,9 +14,7 @@ export async function getSuppliers() {
   return data;
 }
 
-export async function createSupplier(
-  payload: CreateSupplierInput
-) {
+export async function createSupplier(payload: CreateSupplierInput) {
   const { data, error } = await supabase
     .from("suppliers")
     .insert({
@@ -35,9 +32,7 @@ export async function createSupplier(
   return data;
 }
 
-export async function updateSupplier(
-  payload: UpdateSupplierInput
-) {
+export async function updateSupplier(payload: UpdateSupplierInput) {
   const { data, error } = await supabase
     .from("suppliers")
     .update({

@@ -5,8 +5,7 @@ export interface SubCategory {
   created_at: string;
 }
 
-export interface SubCategoryWithCategory
-  extends SubCategory {
+export interface SubCategoryWithCategory extends SubCategory {
   categories: {
     id: string;
     name: string;

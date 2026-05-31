@@ -6,23 +6,13 @@ interface PageHeaderProps {
   action?: ReactNode;
 }
 
-export function PageHeader({
-  title,
-  description,
-  action,
-}: PageHeaderProps) {
+export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
     <div className="mb-6 flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold">
-          {title}
-        </h1>
+        <h1 className="text-3xl font-bold">{title}</h1>
 
-        {description && (
-          <p className="text-muted-foreground">
-            {description}
-          </p>
-        )}
+        {description && <p className="text-muted-foreground">{description}</p>}
       </div>
 
       {action}

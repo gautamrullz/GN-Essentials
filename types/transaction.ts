@@ -8,8 +8,7 @@ export interface InventoryTransaction {
   created_at: string;
 }
 
-export interface InventoryTransactionWithRelations
-  extends InventoryTransaction {
+export interface InventoryTransactionWithRelations extends InventoryTransaction {
   products: {
     id: string;
     name: string;

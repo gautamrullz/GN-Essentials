@@ -34,45 +34,29 @@ import { getSubCategories } from "@/lib/services/sub-categories";
 
 import { Category } from "@/types/category";
 
-import {
-  Product,
-  ProductWithRelations,
-} from "@/types/product";
+import { Product, ProductWithRelations } from "@/types/product";
 
-import {
-  SubCategory,
-} from "@/types/sub-category";
+import { SubCategory } from "@/types/sub-category";
 
 import { ProductFormValues } from "@/lib/validations/product";
 
 export default function ProductsPage() {
-  const [products, setProducts] =
-    useState<ProductWithRelations[]>([]);
+  const [products, setProducts] = useState<ProductWithRelations[]>([]);
 
-  const [categories, setCategories] =
-    useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const [subCategories, setSubCategories] =
-    useState<SubCategory[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [deletingId, setDeletingId] =
-    useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const [selectedProduct, setSelectedProduct] =
-    useState<Product>();
+  const [selectedProduct, setSelectedProduct] = useState<Product>();
 
   async function loadData() {
-    const [
-      productData,
-      categoryData,
-      subCategoryData,
-    ] = await Promise.all([
+    const [productData, categoryData, subCategoryData] = await Promise.all([
       getProducts(),
       getCategories(),
       getSubCategories(),
@@ -82,10 +66,7 @@ export default function ProductsPage() {
 
     setCategories(categoryData ?? []);
 
-    setSubCategories(
-      (subCategoryData ??
-        []) as SubCategory[]
-    );
+    setSubCategories((subCategoryData ?? []) as SubCategory[]);
   }
 
   useEffect(() => {
@@ -96,9 +77,7 @@ export default function ProductsPage() {
     void fetchData();
   }, []);
 
-  async function handleSubmit(
-    values: ProductFormValues
-  ) {
+  async function handleSubmit(values: ProductFormValues) {
     try {
       if (selectedProduct) {
         await updateProduct({
@@ -106,38 +85,25 @@ export default function ProductsPage() {
           ...values,
         });
 
-        toast.success(
-          "Product updated successfully"
-        );
+        toast.success("Product updated successfully");
       } else {
         await createProduct(values);
 
-        toast.success(
-          "Product created successfully"
-        );
+        toast.success("Product created successfully");
       }
 
       await loadData();
 
-      setSelectedProduct(
-        undefined
-      );
+      setSelectedProduct(undefined);
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        "Failed to save product"
-      );
+      toast.error("Failed to save product");
     }
   }
 
-  async function handleDelete(
-    product: Product
-  ) {
-    const confirmed =
-      window.confirm(
-        `Delete ${product.name}?`
-      );
+  async function handleDelete(product: Product) {
+    const confirmed = window.confirm(`Delete ${product.name}?`);
 
     if (!confirmed) {
       return;
@@ -148,42 +114,28 @@ export default function ProductsPage() {
 
       await deleteProduct(product.id);
 
-      toast.success(
-        "Product deleted successfully"
-      );
+      toast.success("Product deleted successfully");
 
       await loadData();
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        "Failed to delete product"
-      );
+      toast.error("Failed to delete product");
     } finally {
       setDeletingId(null);
     }
   }
 
-  const filteredProducts =
-    products.filter((product) => {
-      const searchValue =
-        search.toLowerCase();
+  const filteredProducts = products.filter((product) => {
+    const searchValue = search.toLowerCase();
 
-      return (
-        product.name
-          .toLowerCase()
-          .includes(searchValue) ||
-        product.brand
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        product.categories?.name
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        product.sub_categories?.name
-          ?.toLowerCase()
-          .includes(searchValue)
-      );
-    });
+    return (
+      product.name.toLowerCase().includes(searchValue) ||
+      product.brand?.toLowerCase().includes(searchValue) ||
+      product.categories?.name?.toLowerCase().includes(searchValue) ||
+      product.sub_categories?.name?.toLowerCase().includes(searchValue)
+    );
+  });
 
   return (
     <>
@@ -193,9 +145,7 @@ export default function ProductsPage() {
         action={
           <Button
             onClick={() => {
-              setSelectedProduct(
-                undefined
-              );
+              setSelectedProduct(undefined);
 
               setOpen(true);
             }}
@@ -209,11 +159,7 @@ export default function ProductsPage() {
         <Input
           placeholder="Search products..."
           value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -221,130 +167,72 @@ export default function ProductsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                Name
-              </TableHead>
+              <TableHead>Name</TableHead>
 
-              <TableHead>
-                Brand
-              </TableHead>
+              <TableHead>Brand</TableHead>
 
-              <TableHead>
-                Category
-              </TableHead>
+              <TableHead>Category</TableHead>
 
-              <TableHead>
-                Sub Category
-              </TableHead>
+              <TableHead>Sub Category</TableHead>
 
-              <TableHead>
-                Unit
-              </TableHead>
+              <TableHead>Unit</TableHead>
 
-              <TableHead>
-                Status
-              </TableHead>
+              <TableHead>Status</TableHead>
 
-              <TableHead>
-                Actions
-              </TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {filteredProducts.length ===
-            0 ? (
+            {filteredProducts.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={7}
-                >
+                <TableCell colSpan={7}>
                   <EmptyState title="No products found" />
                 </TableCell>
               </TableRow>
             ) : (
-              filteredProducts.map(
-                (product) => (
-                  <TableRow
-                    key={product.id}
-                  >
-                    <TableCell>
-                      {product.name}
-                    </TableCell>
+              filteredProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>{product.name}</TableCell>
 
-                    <TableCell>
-                      {
-                        product.brand
-                      }
-                    </TableCell>
+                  <TableCell>{product.brand}</TableCell>
 
-                    <TableCell>
-                      {
-                        product
-                          .categories
-                          ?.name
-                      }
-                    </TableCell>
+                  <TableCell>{product.categories?.name}</TableCell>
 
-                    <TableCell>
-                      {
-                        product
-                          .sub_categories
-                          ?.name
-                      }
-                    </TableCell>
+                  <TableCell>{product.sub_categories?.name}</TableCell>
 
-                    <TableCell>
-                      {
-                        product.unit_type
-                      }
-                    </TableCell>
+                  <TableCell>{product.unit_type}</TableCell>
 
-                    <TableCell>
-                      <StatusBadge
-                        status={
-                          product.status
-                        }
-                      />
-                    </TableCell>
+                  <TableCell>
+                    <StatusBadge status={product.status} />
+                  </TableCell>
 
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedProduct(
-                              product
-                            );
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedProduct(product);
 
-                            setOpen(
-                              true
-                            );
-                          }}
-                        >
-                          Edit
-                        </Button>
+                          setOpen(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
 
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled={
-                            deletingId ===
-                            product.id
-                          }
-                          onClick={() =>
-                            handleDelete(
-                              product
-                            )
-                          }
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )
-              )
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={deletingId === product.id}
+                        onClick={() => handleDelete(product)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>
@@ -355,9 +243,7 @@ export default function ProductsPage() {
         onOpenChange={setOpen}
         product={selectedProduct}
         categories={categories}
-        subCategories={
-          subCategories
-        }
+        subCategories={subCategories}
         onSubmit={handleSubmit}
       />
     </>

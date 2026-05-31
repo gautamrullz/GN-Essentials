@@ -4,17 +4,9 @@ interface StatusBadgeProps {
   status: string;
 }
 
-export function StatusBadge({
-  status,
-}: StatusBadgeProps) {
+export function StatusBadge({ status }: StatusBadgeProps) {
   return (
-    <Badge
-      variant={
-        status === "ACTIVE"
-          ? "default"
-          : "secondary"
-      }
-    >
+    <Badge variant={status === "ACTIVE" ? "default" : "secondary"}>
       {status}
     </Badge>
   );

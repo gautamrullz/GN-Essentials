@@ -32,10 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  supplierSchema,
-  SupplierFormValues,
-} from "@/lib/validations/supplier";
+import { supplierSchema, SupplierFormValues } from "@/lib/validations/supplier";
 
 import { Supplier } from "@/types/supplier";
 
@@ -45,9 +42,7 @@ interface SupplierModalProps {
 
   supplier?: Supplier;
 
-  onSubmit: (
-    values: SupplierFormValues
-  ) => Promise<void>;
+  onSubmit: (values: SupplierFormValues) => Promise<void>;
 }
 
 export function SupplierModal({
@@ -75,10 +70,7 @@ export function SupplierModal({
         phone: supplier.phone ?? "",
         gst_number: supplier.gst_number ?? "",
         address: supplier.address ?? "",
-        status:
-          supplier.status === "INACTIVE"
-            ? "INACTIVE"
-            : "ACTIVE",
+        status: supplier.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
       });
 
       return;
@@ -93,9 +85,7 @@ export function SupplierModal({
     });
   }, [supplier, form]);
 
-  const handleSubmit = async (
-    values: SupplierFormValues
-  ) => {
+  const handleSubmit = async (values: SupplierFormValues) => {
     await onSubmit(values);
 
     onOpenChange(false);
@@ -104,24 +94,17 @@ export function SupplierModal({
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {supplier
-              ? "Edit Supplier"
-              : "Add Supplier"}
+            {supplier ? "Edit Supplier" : "Add Supplier"}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(
-              handleSubmit
-            )}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
             <FormField
@@ -129,15 +112,10 @@ export function SupplierModal({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Supplier Name
-                  </FormLabel>
+                  <FormLabel>Supplier Name</FormLabel>
 
                   <FormControl>
-                    <Input
-                      placeholder="Supplier name"
-                      {...field}
-                    />
+                    <Input placeholder="Supplier name" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -150,15 +128,10 @@ export function SupplierModal({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Phone
-                  </FormLabel>
+                  <FormLabel>Phone</FormLabel>
 
                   <FormControl>
-                    <Input
-                      placeholder="Phone number"
-                      {...field}
-                    />
+                    <Input placeholder="Phone number" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -171,15 +144,10 @@ export function SupplierModal({
               name="gst_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    GST Number
-                  </FormLabel>
+                  <FormLabel>GST Number</FormLabel>
 
                   <FormControl>
-                    <Input
-                      placeholder="GST Number"
-                      {...field}
-                    />
+                    <Input placeholder="GST Number" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -192,15 +160,10 @@ export function SupplierModal({
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Address
-                  </FormLabel>
+                  <FormLabel>Address</FormLabel>
 
                   <FormControl>
-                    <Textarea
-                      placeholder="Supplier address"
-                      {...field}
-                    />
+                    <Textarea placeholder="Supplier address" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -213,16 +176,9 @@ export function SupplierModal({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Status
-                  </FormLabel>
+                  <FormLabel>Status</FormLabel>
 
-                  <Select
-                    value={field.value}
-                    onValueChange={
-                      field.onChange
-                    }
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue />
@@ -230,13 +186,9 @@ export function SupplierModal({
                     </FormControl>
 
                     <SelectContent>
-                      <SelectItem value="ACTIVE">
-                        Active
-                      </SelectItem>
+                      <SelectItem value="ACTIVE">Active</SelectItem>
 
-                      <SelectItem value="INACTIVE">
-                        Inactive
-                      </SelectItem>
+                      <SelectItem value="INACTIVE">Inactive</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -249,17 +201,13 @@ export function SupplierModal({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
-                  onOpenChange(false)
-                }
+                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
 
               <Button type="submit">
-                {supplier
-                  ? "Update Supplier"
-                  : "Create Supplier"}
+                {supplier ? "Update Supplier" : "Create Supplier"}
               </Button>
             </div>
           </form>

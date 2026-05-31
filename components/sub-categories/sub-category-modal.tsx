@@ -44,9 +44,7 @@ interface SubCategoryModalProps {
   onOpenChange: (open: boolean) => void;
   subCategory?: SubCategory;
   categories: Category[];
-  onSubmit: (
-    values: SubCategoryFormValues
-  ) => Promise<void>;
+  onSubmit: (values: SubCategoryFormValues) => Promise<void>;
 }
 
 export function SubCategoryModal({
@@ -78,9 +76,7 @@ export function SubCategoryModal({
     }
   }, [subCategory, form]);
 
-  const handleSubmit = async (
-    values: SubCategoryFormValues
-  ) => {
+  const handleSubmit = async (values: SubCategoryFormValues) => {
     await onSubmit(values);
 
     form.reset();
@@ -89,24 +85,17 @@ export function SubCategoryModal({
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {subCategory
-              ? "Edit Sub Category"
-              : "Add Sub Category"}
+            {subCategory ? "Edit Sub Category" : "Add Sub Category"}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(
-              handleSubmit
-            )}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
             <FormField
@@ -114,16 +103,9 @@ export function SubCategoryModal({
               name="category_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Category
-                  </FormLabel>
+                  <FormLabel>Category</FormLabel>
 
-                  <Select
-                    value={field.value}
-                    onValueChange={
-                      field.onChange
-                    }
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select Category" />
@@ -131,22 +113,11 @@ export function SubCategoryModal({
                     </FormControl>
 
                     <SelectContent>
-                      {categories.map(
-                        (category) => (
-                          <SelectItem
-                            key={
-                              category.id
-                            }
-                            value={
-                              category.id
-                            }
-                          >
-                            {
-                              category.name
-                            }
-                          </SelectItem>
-                        )
-                      )}
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -160,15 +131,10 @@ export function SubCategoryModal({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Sub Category Name
-                  </FormLabel>
+                  <FormLabel>Sub Category Name</FormLabel>
 
                   <FormControl>
-                    <Input
-                      placeholder="Sub Category Name"
-                      {...field}
-                    />
+                    <Input placeholder="Sub Category Name" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -180,17 +146,13 @@ export function SubCategoryModal({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
-                  onOpenChange(false)
-                }
+                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>
 
               <Button type="submit">
-                {subCategory
-                  ? "Update Sub Category"
-                  : "Create Sub Category"}
+                {subCategory ? "Update Sub Category" : "Create Sub Category"}
               </Button>
             </div>
           </form>

@@ -12,8 +12,7 @@ export interface Product {
   updated_at: string;
 }
 
-export interface ProductWithRelations
-  extends Product {
+export interface ProductWithRelations extends Product {
   categories: {
     id: string;
     name: string;
