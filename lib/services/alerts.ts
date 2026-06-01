@@ -58,5 +58,5 @@ export async function getExpiringBatches(): Promise<ExpiringBatch[]> {
     return expiry >= today && expiry <= next30Days;
   });
 
-  return expiringBatches as ExpiringBatch[];
+  return expiringBatches as unknown as ExpiringBatch[];
 }
