@@ -74,7 +74,7 @@ export default function ExpiryPage() {
             ) : (
               batches.map((batch) => (
                 <TableRow key={batch.id}>
-                  <TableCell>{batch.products?.[0]?.name}</TableCell>
+                  <TableCell>{batch.products?.name}</TableCell>
 
                   <TableCell>{batch.batch_number}</TableCell>
 

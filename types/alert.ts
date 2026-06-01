@@ -13,5 +13,5 @@ export interface ExpiringBatch {
   products: {
     id: string;
     name: string;
-  }[];
+  } | null;
 }
