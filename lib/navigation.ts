@@ -7,6 +7,7 @@ import {
   ClipboardList,
   BarChart3,
   ArrowLeftRight,
+  TriangleAlert,
 } from "lucide-react";
 
 export const navigation = [
@@ -20,6 +21,7 @@ export const navigation = [
       },
     ],
   },
+
   {
     title: "Master Data",
     items: [
@@ -45,6 +47,7 @@ export const navigation = [
       },
     ],
   },
+
   {
     title: "Inventory",
     items: [
@@ -65,6 +68,23 @@ export const navigation = [
       },
     ],
   },
+
+  {
+    title: "Alerts",
+    items: [
+      {
+        title: "Low Stock",
+        href: "/dashboard/alerts/low-stock",
+        icon: TriangleAlert,
+      },
+      {
+        title: "Expiry",
+        href: "/dashboard/alerts/expiry",
+        icon: TriangleAlert,
+      },
+    ],
+  },
+
   {
     title: "Reports",
     items: [

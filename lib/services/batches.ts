@@ -33,6 +33,28 @@ export async function getBatches(): Promise<BatchWithRelations[]> {
   return data as BatchWithRelations[];
 }
 
+export async function getBatchById(id: string) {
+  const { data, error } = await supabase
+    .from("batches")
+    .select(
+      `
+        *,
+        products (
+          id,
+          name
+        )
+      `,
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export async function createBatch(payload: CreateBatchInput) {
   const { data, error } = await supabase
     .from("batches")

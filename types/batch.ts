@@ -41,3 +41,11 @@ export type CreateBatchInput = {
 export type UpdateBatchInput = CreateBatchInput & {
   id: string;
 };
+
+export interface BatchDetails
+  extends Batch {
+  products: {
+    id: string;
+    name: string;
+  } | null;
+}
