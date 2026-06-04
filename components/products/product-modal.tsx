@@ -115,7 +115,7 @@ export function ProductModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
         </DialogHeader>
@@ -287,8 +287,9 @@ export function ProductModal({
               )}
             />
 
-            <div className="flex justify-end gap-2">
+            <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t bg-background pt-4 md:flex-row md:justify-end">
               <Button
+                className="w-full md:w-auto"
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
@@ -296,7 +297,7 @@ export function ProductModal({
                 Cancel
               </Button>
 
-              <Button type="submit">
+              <Button className="w-full md:w-auto" type="submit">
                 {product ? "Update Product" : "Create Product"}
               </Button>
             </div>

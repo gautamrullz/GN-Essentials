@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 
 import { getBatches, getBatchById } from "@/lib/services/batches";
 
@@ -120,6 +120,48 @@ export default function StockMovementPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
+            <CardTitle>Batch Information</CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            {!selectedBatch ? (
+              <p className="text-muted-foreground">Select a batch</p>
+            ) : (
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Product</span>
+                  <span>{selectedBatch.products?.name}</span>
+                </div>
+
+                <div>
+                  <strong>Batch:</strong> {selectedBatch.batch_number}
+                </div>
+
+                <div className="rounded-md border p-3">
+                  <p className="text-sm text-muted-foreground">Current Stock</p>
+
+                  <p className="text-2xl font-bold">{selectedBatch.quantity}</p>
+                </div>
+
+                <div>
+                  <strong>Expiry:</strong> {selectedBatch.expiry_date}
+                </div>
+
+                <div>
+                  <strong>Purchase Price:</strong> ₹
+                  {selectedBatch.purchase_price}
+                </div>
+
+                <div>
+                  <strong>Selling Price:</strong> ₹{selectedBatch.selling_price}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Movement Details</CardTitle>
           </CardHeader>
 
@@ -192,45 +234,6 @@ export default function StockMovementPage() {
             >
               Save Movement
             </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Batch Information</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            {!selectedBatch ? (
-              <p className="text-muted-foreground">Select a batch</p>
-            ) : (
-              <div className="space-y-3">
-                <div>
-                  <strong>Product:</strong> {selectedBatch.products?.name}
-                </div>
-
-                <div>
-                  <strong>Batch:</strong> {selectedBatch.batch_number}
-                </div>
-
-                <div>
-                  <strong>Current Stock:</strong> {selectedBatch.quantity}
-                </div>
-
-                <div>
-                  <strong>Expiry:</strong> {selectedBatch.expiry_date}
-                </div>
-
-                <div>
-                  <strong>Purchase Price:</strong> ₹
-                  {selectedBatch.purchase_price}
-                </div>
-
-                <div>
-                  <strong>Selling Price:</strong> ₹{selectedBatch.selling_price}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>

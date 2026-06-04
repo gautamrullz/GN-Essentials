@@ -37,8 +37,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-4xl font-bold">Dashboard</h1>
-
+        <h1 className="text-3xl font-bold md:text-4xl">Dashboard</h1>
         <p className="text-muted-foreground mt-2">
           GN Essentials Inventory Management System
         </p>
@@ -46,59 +45,48 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Link
-          href="/dashboard/products"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Products</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalProducts}</p>
-        </Link>
-
-        <Link
-          href="/dashboard/batches"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Batches</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalBatches}</p>
-        </Link>
-
-        <Link
-          href="/dashboard/products"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Stock</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalStock}</p>
-        </Link>
-
-        <Link
           href="/dashboard/reports"
           className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
         >
           <h3 className="text-sm text-muted-foreground">Inventory Value</h3>
-
           <p className="mt-2 text-3xl font-bold">
             ₹{metrics.inventoryValue.toFixed(2)}
           </p>
         </Link>
-
         <Link
           href="/dashboard/alerts/low-stock"
           className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
         >
           <h3 className="text-sm text-muted-foreground">Low Stock Products</h3>
-
           <p className="mt-2 text-3xl font-bold">{metrics.lowStockProducts}</p>
         </Link>
-
         <Link
-          href="/dashboard/alerts/expiring-soon"
+          href="/dashboard/alerts/expiry"
           className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
         >
           <h3 className="text-sm text-muted-foreground">Expiring Soon</h3>
-
           <p className="mt-2 text-3xl font-bold">{metrics.expiringSoon}</p>
+        </Link>
+        <Link
+          href="/dashboard/products"
+          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
+        >
+          <h3 className="text-sm text-muted-foreground">Total Products</h3>
+          <p className="mt-2 text-3xl font-bold">{metrics.totalProducts}</p>
+        </Link>
+        <Link
+          href="/dashboard/batches"
+          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
+        >
+          <h3 className="text-sm text-muted-foreground">Total Batches</h3>
+          <p className="mt-2 text-3xl font-bold">{metrics.totalBatches}</p>
+        </Link>
+        <Link
+          href="/dashboard/products"
+          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
+        >
+          <h3 className="text-sm text-muted-foreground">Total Stock</h3>
+          <p className="mt-2 text-3xl font-bold">{metrics.totalStock}</p>
         </Link>
       </div>
     </div>

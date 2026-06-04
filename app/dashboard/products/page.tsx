@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 import { StatusBadge } from "@/components/crud/status-badge";
 
@@ -163,19 +163,21 @@ export default function ProductsPage() {
         />
       </div>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
 
-              <TableHead>Brand</TableHead>
+              <TableHead className="hidden md:table-cell">Brand</TableHead>
 
-              <TableHead>Category</TableHead>
+              <TableHead className="hidden lg:table-cell">Category</TableHead>
 
-              <TableHead>Sub Category</TableHead>
+              <TableHead className="hidden lg:table-cell">
+                Sub Category
+              </TableHead>
 
-              <TableHead>Unit</TableHead>
+              <TableHead className="hidden md:table-cell">Unit</TableHead>
 
               <TableHead>Status</TableHead>
 
@@ -193,22 +195,35 @@ export default function ProductsPage() {
             ) : (
               filteredProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{product.name}</div>
+                      <div className="text-xs text-muted-foreground md:hidden">
+                        {product.brand}
+                      </div>
+                    </div>
+                  </TableCell>
 
-                  <TableCell>{product.brand}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {product.brand}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {product.categories?.name}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {product.sub_categories?.name}
+                  </TableCell>
 
-                  <TableCell>{product.categories?.name}</TableCell>
-
-                  <TableCell>{product.sub_categories?.name}</TableCell>
-
-                  <TableCell>{product.unit_type}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {product.unit_type}
+                  </TableCell>
 
                   <TableCell>
                     <StatusBadge status={product.status} />
                   </TableCell>
 
                   <TableCell>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-1 md:flex-row">
                       <Button
                         size="sm"
                         variant="outline"

@@ -9,15 +9,15 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 border-r bg-background">
-      <div className="p-6">
-        <h2 className="font-bold text-xl">GN Essentials</h2>
+    <aside className="flex h-full w-full flex-col bg-background">
+      <div className="border-b p-4">
+        <h2 className="text-lg font-bold">GN Essentials</h2>
       </div>
 
-      <nav className="space-y-6 px-3">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-3 pb-6">
         {navigation.map((section) => (
           <div key={section.title}>
-            <p className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase">
+            <p className="mb-2 px-3 text-xs font-semibold uppercase text-muted-foreground">
               {section.title}
             </p>
 

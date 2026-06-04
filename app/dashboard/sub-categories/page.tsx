@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 
 import { SubCategoryModal } from "@/components/sub-categories/sub-category-modal";

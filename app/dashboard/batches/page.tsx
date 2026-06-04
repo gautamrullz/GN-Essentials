@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 import { StatusBadge } from "@/components/crud/status-badge";
 
@@ -161,23 +161,21 @@ export default function BatchesPage() {
         />
       </div>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Batch</TableHead>
 
-              <TableHead>Product</TableHead>
+              <TableHead className="hidden md:table-cell">Product</TableHead>
 
-              <TableHead>Supplier</TableHead>
+              <TableHead className="hidden lg:table-cell">Supplier</TableHead>
 
-              <TableHead>Qty</TableHead>
+              <TableHead className="hidden md:table-cell">Purchase</TableHead>
 
-              <TableHead>Purchase</TableHead>
+              <TableHead className="hidden md:table-cell">Selling</TableHead>
 
-              <TableHead>Selling</TableHead>
-
-              <TableHead>Expiry</TableHead>
+              <TableHead className="hidden lg:table-cell">Expiry</TableHead>
 
               <TableHead>Status</TableHead>
 
@@ -195,19 +193,48 @@ export default function BatchesPage() {
             ) : (
               filteredBatches.map((batch) => (
                 <TableRow key={batch.id}>
-                  <TableCell>{batch.batch_number}</TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{batch.batch_number}</div>
 
-                  <TableCell>{batch.products?.name}</TableCell>
+                      <div className="text-xs text-muted-foreground md:hidden">
+                        {batch.products?.name}
+                      </div>
 
-                  <TableCell>{batch.suppliers?.name}</TableCell>
+                      <div className="mt-1 space-y-1 text-xs md:hidden">
+                        <div>Purchase: ₹{batch.purchase_price}</div>
 
-                  <TableCell>{batch.quantity}</TableCell>
+                        <div>Selling: ₹{batch.selling_price}</div>
 
-                  <TableCell>₹{batch.purchase_price}</TableCell>
+                        <div>
+                          Expiry:{" "}
+                          {batch.expiry_date
+                            ? new Date(batch.expiry_date).toLocaleDateString()
+                            : "-"}
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
 
-                  <TableCell>₹{batch.selling_price}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {batch.products?.name}
+                  </TableCell>
 
-                  <TableCell>{batch.expiry_date}</TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {batch.suppliers?.name}
+                  </TableCell>
+
+                  <TableCell className="hidden md:table-cell">
+                    ₹{batch.purchase_price}
+                  </TableCell>
+
+                  <TableCell className="hidden md:table-cell">
+                    ₹{batch.selling_price}
+                  </TableCell>
+
+                  <TableCell className="hidden lg:table-cell">
+                    {batch.expiry_date}
+                  </TableCell>
 
                   <TableCell>
                     <StatusBadge status={batch.status} />
