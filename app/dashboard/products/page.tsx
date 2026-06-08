@@ -143,15 +143,21 @@ export default function ProductsPage() {
         title="Products"
         description="Manage products"
         action={
-          <Button
-            onClick={() => {
-              setSelectedProduct(undefined);
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {products.length} Products
+            </div>
 
-              setOpen(true);
-            }}
-          >
-            Add Product
-          </Button>
+            <Button
+              onClick={() => {
+                setSelectedProduct(undefined);
+
+                setOpen(true);
+              }}
+            >
+              Add Product
+            </Button>
+          </div>
         }
       />
 
@@ -176,6 +182,8 @@ export default function ProductsPage() {
               <TableHead className="hidden lg:table-cell">
                 Sub Category
               </TableHead>
+
+              <TableHead>Stock</TableHead>
 
               <TableHead className="hidden md:table-cell">Unit</TableHead>
 
@@ -212,6 +220,18 @@ export default function ProductsPage() {
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
                     {product.sub_categories?.name}
+                  </TableCell>
+
+                  <TableCell>
+                    <span
+                      className={
+                        product.current_stock <= product.low_stock_limit
+                          ? "font-semibold text-red-500"
+                          : ""
+                      }
+                    >
+                      {product.current_stock}
+                    </span>
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">

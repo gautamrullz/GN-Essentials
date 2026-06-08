@@ -38,6 +38,8 @@ import { Product } from "@/types/product";
 import { Supplier } from "@/types/supplier";
 
 import { BatchFormValues } from "@/lib/validations/batch";
+import { ExpiryBadge } from "@/components/crud/expiry-badge";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -141,15 +143,20 @@ export default function BatchesPage() {
         title="Batches"
         description="Manage inventory batches"
         action={
-          <Button
-            onClick={() => {
-              setSelectedBatch(undefined);
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {batches.length} Batches
+            </div>
+            <Button
+              onClick={() => {
+                setSelectedBatch(undefined);
 
-              setOpen(true);
-            }}
-          >
-            Add Batch
-          </Button>
+                setOpen(true);
+              }}
+            >
+              Add Batch
+            </Button>
+          </div>
         }
       />
 
@@ -168,6 +175,8 @@ export default function BatchesPage() {
               <TableHead>Batch</TableHead>
 
               <TableHead className="hidden md:table-cell">Product</TableHead>
+
+              <TableHead className="hidden lg:table-cell">Quantity</TableHead>
 
               <TableHead className="hidden lg:table-cell">Supplier</TableHead>
 
@@ -202,6 +211,7 @@ export default function BatchesPage() {
                       </div>
 
                       <div className="mt-1 space-y-1 text-xs md:hidden">
+                        <div>Quantity: {batch.quantity}</div>
                         <div>Purchase: ₹{batch.purchase_price}</div>
 
                         <div>Selling: ₹{batch.selling_price}</div>
@@ -211,13 +221,19 @@ export default function BatchesPage() {
                           {batch.expiry_date
                             ? new Date(batch.expiry_date).toLocaleDateString()
                             : "-"}
+                          
                         </div>
+                        <ExpiryBadge expiryDate={batch.expiry_date} />
                       </div>
                     </div>
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
                     {batch.products?.name}
+                  </TableCell>
+
+                  <TableCell className="hidden md:table-cell">
+                    <span>{batch.quantity}</span>
                   </TableCell>
 
                   <TableCell className="hidden lg:table-cell">

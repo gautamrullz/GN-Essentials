@@ -133,7 +133,14 @@ export default function SuppliersPage() {
       <PageHeader
         title="Suppliers"
         description="Manage supplier information"
-        action={<Button onClick={handleAddSupplier}>Add Supplier</Button>}
+        action={
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {suppliers.length} Suppliers
+            </div>
+            <Button onClick={handleAddSupplier}>Add Supplier</Button>
+          </div>
+        }
       />
 
       <div className="mb-4">

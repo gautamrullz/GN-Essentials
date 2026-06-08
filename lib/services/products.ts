@@ -7,28 +7,50 @@ import {
 } from "@/types/product";
 
 export async function getProducts(): Promise<ProductWithRelations[]> {
-  const { data, error } = await supabase
-    .from("products")
-    .select(
-      `
-        *,
-        categories (
-          id,
-          name
-        ),
-        sub_categories (
-          id,
-          name
-        )
-      `,
-    )
-    .order("name");
+  const [
+    { data: products, error: productsError },
+    { data: batches, error: batchesError },
+  ] = await Promise.all([
+    supabase
+      .from("products")
+      .select(
+        `
+            *,
+            categories (
+              id,
+              name
+            ),
+            sub_categories (
+              id,
+              name
+            )
+          `,
+      )
+      .order("name"),
 
-  if (error) {
-    throw error;
+    supabase.from("batches").select("product_id, quantity"),
+  ]);
+
+  if (productsError) {
+    throw productsError;
   }
 
-  return data as ProductWithRelations[];
+  if (batchesError) {
+    throw batchesError;
+  }
+
+  const stockMap = new Map<string, number>();
+
+  batches?.forEach((batch) => {
+    const current = stockMap.get(batch.product_id) ?? 0;
+
+    stockMap.set(batch.product_id, current + Number(batch.quantity ?? 0));
+  });
+
+  return (products ?? []).map((product) => ({
+    ...product,
+    current_stock: stockMap.get(product.id) ?? 0,
+  })) as ProductWithRelations[];
 }
 
 export async function createProduct(payload: CreateProductInput) {

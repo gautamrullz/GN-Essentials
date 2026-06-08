@@ -54,6 +54,13 @@ export default function TransactionsPage() {
       <PageHeader
         title="Transactions"
         description="Inventory transaction history"
+        action={
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {transactions.length} Transactions
+            </div>
+          </div>
+        }
       />
 
       <div className="mb-4">
