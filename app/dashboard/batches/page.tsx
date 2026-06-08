@@ -39,7 +39,6 @@ import { Supplier } from "@/types/supplier";
 
 import { BatchFormValues } from "@/lib/validations/batch";
 import { ExpiryBadge } from "@/components/crud/expiry-badge";
-import { Pencil, Trash2 } from "lucide-react";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -221,7 +220,6 @@ export default function BatchesPage() {
                           {batch.expiry_date
                             ? new Date(batch.expiry_date).toLocaleDateString()
                             : "-"}
-                          
                         </div>
                         <ExpiryBadge expiryDate={batch.expiry_date} />
                       </div>
