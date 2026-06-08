@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 
 import { CategoryModal } from "@/components/categories/category-modal";
@@ -127,7 +127,14 @@ export default function CategoriesPage() {
       <PageHeader
         title="Categories"
         description="Manage product categories"
-        action={<Button onClick={handleAddCategory}>Add Category</Button>}
+        action={
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {categories.length} Categories
+            </div>
+            <Button onClick={handleAddCategory}>Add Category</Button>
+          </div>
+        }
       />
 
       <div className="mb-4">

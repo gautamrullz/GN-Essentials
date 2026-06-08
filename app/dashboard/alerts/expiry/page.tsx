@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 
 import {
   Table,

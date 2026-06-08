@@ -22,6 +22,7 @@ export interface ProductWithRelations extends Product {
     id: string;
     name: string;
   } | null;
+  current_stock: number;
 }
 
 export type CreateProductInput = {

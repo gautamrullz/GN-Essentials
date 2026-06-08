@@ -1,9 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { getDashboardMetrics } from "@/lib/services/dashboard";
+import {
+  AlertTriangle,
+  BarChart3,
+  Boxes,
+  Clock3,
+  IndianRupee,
+  Package,
+} from "lucide-react";
+import { MetricCard } from "./metric-card";
+import { QuickActions } from "./quick-actions";
 
 interface DashboardMetrics {
   totalProducts: number;
@@ -37,69 +46,58 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-4xl font-bold">Dashboard</h1>
-
+        <h1 className="text-3xl font-bold md:text-4xl">Dashboard</h1>
+        <QuickActions />
         <p className="text-muted-foreground mt-2">
           GN Essentials Inventory Management System
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Link
-          href="/dashboard/products"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Products</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalProducts}</p>
-        </Link>
-
-        <Link
-          href="/dashboard/batches"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Batches</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalBatches}</p>
-        </Link>
-
-        <Link
-          href="/dashboard/products"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Total Stock</h3>
-
-          <p className="mt-2 text-3xl font-bold">{metrics.totalStock}</p>
-        </Link>
-
-        <Link
+        <MetricCard
+          title="Inventory Value"
+          value={`₹${metrics.inventoryValue.toFixed(2)}`}
           href="/dashboard/reports"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Inventory Value</h3>
+          icon={IndianRupee}
+          variant="hero"
+        />
 
-          <p className="mt-2 text-3xl font-bold">
-            ₹{metrics.inventoryValue.toFixed(2)}
-          </p>
-        </Link>
-
-        <Link
+        <MetricCard
+          title="Low Stock Products"
+          value={metrics.lowStockProducts}
           href="/dashboard/alerts/low-stock"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Low Stock Products</h3>
+          icon={AlertTriangle}
+          variant="warning"
+        />
 
-          <p className="mt-2 text-3xl font-bold">{metrics.lowStockProducts}</p>
-        </Link>
+        <MetricCard
+          title="Expiring Soon"
+          value={metrics.expiringSoon}
+          href="/dashboard/alerts/expiry"
+          icon={Clock3}
+          variant="danger"
+        />
 
-        <Link
-          href="/dashboard/alerts/expiring-soon"
-          className="rounded-lg border p-6 transition-all hover:bg-muted/50 hover:shadow-sm"
-        >
-          <h3 className="text-sm text-muted-foreground">Expiring Soon</h3>
+        <MetricCard
+          title="Total Products"
+          value={metrics.totalProducts}
+          href="/dashboard/products"
+          icon={Package}
+        />
 
-          <p className="mt-2 text-3xl font-bold">{metrics.expiringSoon}</p>
-        </Link>
+        <MetricCard
+          title="Total Batches"
+          value={metrics.totalBatches}
+          href="/dashboard/batches"
+          icon={Boxes}
+        />
+
+        <MetricCard
+          title="Total Stock"
+          value={metrics.totalStock}
+          href="/dashboard/products"
+          icon={BarChart3}
+        />
       </div>
     </div>
   );

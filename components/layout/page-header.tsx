@@ -8,14 +8,14 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <div className="mb-6 flex items-center justify-between">
+    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="text-3xl font-bold">{title}</h1>
+        <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
 
         {description && <p className="text-muted-foreground">{description}</p>}
       </div>
 
-      {action}
+      {action && <div className="w-full md:w-auto">{action}</div>}
     </div>
   );
 }

@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { PageHeader } from "@/components/crud/page-header";
+import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 
 import { SubCategoryModal } from "@/components/sub-categories/sub-category-modal";
@@ -114,14 +114,19 @@ export default function SubCategoriesPage() {
         title="Sub Categories"
         description="Manage sub categories"
         action={
-          <Button
-            onClick={() => {
-              setSelectedSubCategory(undefined);
-              setOpen(true);
-            }}
-          >
-            Add Sub Category
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              {subCategories.length} Sub Categories
+            </div>
+            <Button
+              onClick={() => {
+                setSelectedSubCategory(undefined);
+                setOpen(true);
+              }}
+            >
+              Add Sub Category
+            </Button>
+          </div>
         }
       />
 

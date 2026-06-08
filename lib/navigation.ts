@@ -10,7 +10,21 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
-export const navigation = [
+import { Role } from "@/types/role";
+
+export type NavigationItem = {
+  title: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  roles: Role[];
+};
+
+export type NavigationSection = {
+  title: string;
+  items: NavigationItem[];
+};
+
+export const navigation: NavigationSection[] = [
   {
     title: "Dashboard",
     items: [
@@ -18,6 +32,7 @@ export const navigation = [
         title: "Dashboard",
         href: "/dashboard",
         icon: LayoutDashboard,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
     ],
   },
@@ -29,21 +44,25 @@ export const navigation = [
         title: "Suppliers",
         href: "/dashboard/suppliers",
         icon: Users,
+        roles: ["OWNER", "MANAGER"],
       },
       {
         title: "Categories",
         href: "/dashboard/categories",
         icon: FolderTree,
+        roles: ["OWNER", "MANAGER"],
       },
       {
         title: "Sub Categories",
         href: "/dashboard/sub-categories",
         icon: FolderTree,
+        roles: ["OWNER", "MANAGER"],
       },
       {
         title: "Products",
         href: "/dashboard/products",
         icon: Package,
+        roles: ["OWNER", "MANAGER"],
       },
     ],
   },
@@ -55,16 +74,19 @@ export const navigation = [
         title: "Batches",
         href: "/dashboard/batches",
         icon: Boxes,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
       {
         title: "Transactions",
         href: "/dashboard/transactions",
         icon: ClipboardList,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
       {
         title: "Stock Movement",
         href: "/dashboard/stock-movement",
         icon: ArrowLeftRight,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
     ],
   },
@@ -76,11 +98,13 @@ export const navigation = [
         title: "Low Stock",
         href: "/dashboard/alerts/low-stock",
         icon: TriangleAlert,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
       {
         title: "Expiry",
         href: "/dashboard/alerts/expiry",
         icon: TriangleAlert,
+        roles: ["OWNER", "MANAGER", "STAFF"],
       },
     ],
   },
@@ -92,6 +116,7 @@ export const navigation = [
         title: "Reports",
         href: "/dashboard/reports",
         icon: BarChart3,
+        roles: ["OWNER", "MANAGER"],
       },
     ],
   },

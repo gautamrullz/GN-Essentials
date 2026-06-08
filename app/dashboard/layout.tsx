@@ -1,4 +1,5 @@
-import { AppSidebar } from "../../components/layout/app-sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 export default function DashboardLayout({
   children,
@@ -7,9 +8,15 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen">
-      <AppSidebar />
+      <div className="hidden w-64 border-r md:block">
+        <AppSidebar />
+      </div>
 
-      <main className="flex-1 overflow-auto p-6">{children}</main>
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <MobileNav />
+
+        <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
+      </div>
     </div>
   );
 }
