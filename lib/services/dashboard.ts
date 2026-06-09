@@ -19,12 +19,20 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
 
   const batches = batchesResult.data ?? [];
 
+  const stockMap = new Map<string, number>();
+
+  batches.forEach((batch) => {
+    const current = stockMap.get(batch.product_id) ?? 0;
+
+    stockMap.set(batch.product_id, current + Number(batch.quantity ?? 0));
+  });
+
   const totalProducts = products.length;
 
   const totalBatches = batches.length;
 
-  const totalStock = batches.reduce(
-    (sum, batch) => sum + Number(batch.quantity ?? 0),
+  const totalStock = Array.from(stockMap.values()).reduce(
+    (sum, stock) => sum + stock,
     0,
   );
 
@@ -35,11 +43,9 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
   );
 
   const lowStockProducts = products.filter((product) => {
-    const productStock = batches
-      .filter((batch) => batch.product_id === product.id)
-      .reduce((sum, batch) => sum + Number(batch.quantity ?? 0), 0);
+    const stock = stockMap.get(product.id) ?? 0;
 
-    return productStock <= Number(product.low_stock_limit ?? 0);
+    return stock <= Number(product.low_stock_limit ?? 0);
   }).length;
 
   const today = new Date();

@@ -190,19 +190,15 @@ export default function ReportsPage() {
               <TableBody>
                 {transactions.map((transaction) => (
                   <TableRow key={transaction.id}>
-                    <div className="font-medium">
+                    <TableCell className="font-medium">
                       {transaction.products?.name}
-                    </div>
+                    </TableCell>
 
                     <TableCell>{transaction.batches?.batch_number}</TableCell>
 
-                    <div className="text-xs text-muted-foreground md:hidden">
-                      {transaction.transaction_type}
-                    </div>
+                    <TableCell>{transaction.transaction_type}</TableCell>
 
-                    <div className="text-xs text-muted-foreground md:hidden">
-                      Qty: {transaction.quantity}
-                    </div>
+                    <TableCell>{transaction.quantity}</TableCell>
 
                     <TableCell>
                       {new Date(transaction.created_at).toLocaleDateString()}

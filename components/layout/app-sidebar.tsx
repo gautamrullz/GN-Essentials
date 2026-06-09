@@ -1,42 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-import { Package } from "lucide-react";
+import { LogOut, Package } from "lucide-react";
 
 import { navigation } from "@/lib/navigation";
-import { getCurrentProfile } from "@/lib/services/profile";
 import { cn } from "@/lib/utils";
 
-import { Profile } from "@/types/profile";
+import { useAuth } from "@/components/providers/auth-provider";
+import { supabase } from "@/lib/supabase/client";
+import { Button } from "../ui/button";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { profile, loading } = useAuth();
+  async function handleLogout() {
+    await supabase.auth.signOut();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
+    router.replace("/login");
+  }
 
-  useEffect(() => {
-    async function loadProfile() {
-      const data = await getCurrentProfile();
-
-      setProfile(data);
-    }
-
-    void loadProfile();
-  }, []);
-
-  if (!profile) {
+  if (loading || !profile) {
     return (
       <aside className="flex h-full w-full flex-col bg-background">
         <div className="border-b p-4">
           <div className="flex items-center gap-2">
             <Package className="h-6 w-6 text-primary" />
 
-            <span className="text-lg font-bold">
-              GN Essentials
-            </span>
+            <span className="text-lg font-bold">GN Essentials</span>
           </div>
 
           <p className="mt-1 text-xs text-muted-foreground">
@@ -53,9 +46,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-2">
           <Package className="h-6 w-6 text-primary" />
 
-          <span className="text-lg font-bold">
-            GN Essentials
-          </span>
+          <span className="text-lg font-bold">GN Essentials</span>
         </div>
 
         <p className="mt-1 text-xs text-muted-foreground">
@@ -107,13 +98,21 @@ export function AppSidebar() {
       </nav>
 
       <div className="border-t p-4">
-        <div className="font-medium">
-          {profile.full_name ?? "Unknown User"}
-        </div>
+        <div className="font-medium">{profile.full_name ?? "Unknown User"}</div>
 
-        <div className="text-xs text-muted-foreground">
-          {profile.role}
-        </div>
+        <div className="text-xs text-muted-foreground">{profile.role}</div>
+
+        <Button
+          variant="destructive"
+          size="sm"
+          className="mt-3 w-full"
+          onClick={() => {
+            void handleLogout();
+          }}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
 
         <div className="mt-2 text-xs text-muted-foreground">
           GN Essentials v1.5

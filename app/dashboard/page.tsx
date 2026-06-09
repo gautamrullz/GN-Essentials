@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { MetricCard } from "./metric-card";
 import { QuickActions } from "./quick-actions";
+import { useAuth } from "@/components/providers/auth-provider";
 
 interface DashboardMetrics {
   totalProducts: number;
@@ -32,6 +33,7 @@ export default function DashboardPage() {
     lowStockProducts: 0,
     expiringSoon: 0,
   });
+  const { role } = useAuth();
 
   useEffect(() => {
     async function loadData() {
@@ -47,20 +49,26 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold md:text-4xl">Dashboard</h1>
-        <QuickActions />
-        <p className="text-muted-foreground mt-2">
+
+        <p className="mt-2 text-muted-foreground">
           GN Essentials Inventory Management System
         </p>
+
+        <div className="mt-4">
+          <QuickActions />
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <MetricCard
-          title="Inventory Value"
-          value={`₹${metrics.inventoryValue.toFixed(2)}`}
-          href="/dashboard/reports"
-          icon={IndianRupee}
-          variant="hero"
-        />
+        {role !== "STAFF" && (
+          <MetricCard
+            title="Inventory Value"
+            value={`₹${metrics.inventoryValue.toFixed(2)}`}
+            href="/dashboard/reports"
+            icon={IndianRupee}
+            variant="hero"
+          />
+        )}
 
         <MetricCard
           title="Low Stock Products"
@@ -78,12 +86,14 @@ export default function DashboardPage() {
           variant="danger"
         />
 
-        <MetricCard
-          title="Total Products"
-          value={metrics.totalProducts}
-          href="/dashboard/products"
-          icon={Package}
-        />
+        {role !== "STAFF" && (
+          <MetricCard
+            title="Total Products"
+            value={metrics.totalProducts}
+            href="/dashboard/products"
+            icon={Package}
+          />
+        )}
 
         <MetricCard
           title="Total Batches"

@@ -22,6 +22,11 @@ export function MobileNav() {
           </SheetTrigger>
 
           <SheetContent side="left" className="w-[85vw] max-w-[320px] p-0">
+            <div className="sr-only">
+              <h2>Navigation Menu</h2>
+              <p>Main application navigation</p>
+            </div>
+
             <AppSidebar />
           </SheetContent>
         </Sheet>
