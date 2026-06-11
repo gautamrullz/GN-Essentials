@@ -6,17 +6,15 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/providers/auth-provider";
 
-export function AuthGuard({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const {
+  const { initialized, isAuthenticated } = useAuth();
+
+  console.log("AUTH GUARD", {
     initialized,
     isAuthenticated,
-  } = useAuth();
+  });
 
   useEffect(() => {
     if (!initialized) {
@@ -26,18 +24,22 @@ export function AuthGuard({
     if (!isAuthenticated) {
       router.replace("/login");
     }
-  }, [
-    initialized,
-    isAuthenticated,
-    router,
-  ]);
+  }, [initialized, isAuthenticated, router]);
 
   if (!initialized) {
-    return null;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Initializing...
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Redirecting...
+      </div>
+    );
   }
 
   return <>{children}</>;

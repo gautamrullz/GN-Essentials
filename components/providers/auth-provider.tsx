@@ -43,40 +43,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      console.log("AUTH INIT START");
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
+      console.log("AUTH USER", user);
 
       setUser(user);
 
       if (user) {
         const profile = await getProfileByUser(user);
+        console.log("PROFILE LOAD START");
 
         setProfile(profile);
+        console.log("PROFILE LOADED", profile);
       }
 
       setLoading(false);
       setInitialized(true);
+      console.log("AUTH INITIALIZED");
     };
 
     void initializeAuth();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event) => {
+      console.log("AUTH EVENT", event);
+
       if (event === "SIGNED_OUT") {
         setUser(null);
         setProfile(null);
-
-        return;
-      }
-
-      if (event === "SIGNED_IN" && session?.user) {
-        setUser(session.user);
-
-        const profile = await getProfileByUser(session.user);
-
-        setProfile(profile);
       }
     });
 

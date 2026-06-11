@@ -77,8 +77,11 @@ export function SubCategoryModal({
   }, [subCategory, form]);
 
   const handleSubmit = async (values: SubCategoryFormValues) => {
+    console.log("FORM SUBMITTED", values);
+
     await onSubmit(values);
 
+    console.log("PRODUCT SAVED");
     form.reset();
 
     onOpenChange(false);
