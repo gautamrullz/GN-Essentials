@@ -37,7 +37,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadData() {
+      console.time("dashboard-metrics");
+
       const data = await getDashboardMetrics();
+
+      console.timeEnd("dashboard-metrics");
 
       setMetrics(data);
     }

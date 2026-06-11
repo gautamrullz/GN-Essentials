@@ -58,6 +58,7 @@ export default function CategoriesPage() {
   }, []);
 
   async function handleSubmit(values: CategoryFormValues) {
+    console.log("PAGE HANDLE SUBMIT", values);
     try {
       if (selectedCategory) {
         await updateCategory({
