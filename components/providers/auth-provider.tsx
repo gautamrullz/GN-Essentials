@@ -43,26 +43,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      console.log("AUTH INIT START");
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        console.log("AUTH INIT START");
 
-      console.log("AUTH USER", user);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      setUser(user);
+        console.log("AUTH USER", user);
 
-      if (user) {
-        const profile = await getProfileByUser(user);
-        console.log("PROFILE LOAD START");
+        setUser(user);
 
-        setProfile(profile);
-        console.log("PROFILE LOADED", profile);
+        if (user) {
+          console.log("PROFILE LOAD START");
+
+          const profile = await getProfileByUser(user);
+
+          console.log("PROFILE LOADED", profile);
+
+          setProfile(profile);
+        }
+      } catch (error) {
+        console.error("AUTH INIT ERROR", error);
+      } finally {
+        console.log("AUTH INITIALIZED");
+
+        setLoading(false);
+        setInitialized(true);
       }
-
-      setLoading(false);
-      setInitialized(true);
-      console.log("AUTH INITIALIZED");
     };
 
     void initializeAuth();
