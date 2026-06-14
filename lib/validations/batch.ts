@@ -7,17 +7,11 @@ export const batchSchema = z.object({
 
   batch_number: z.string().trim().min(1, "Batch number is required"),
 
-  manufacture_date: z.string(),
-
   purchase_date: z.string(),
 
   expiry_date: z.string(),
 
   quantity: z.number().min(1),
-
-  purchase_price: z.number().min(0),
-
-  selling_price: z.number().min(0),
 
   status: z.enum(["ACTIVE", "INACTIVE"]),
 });

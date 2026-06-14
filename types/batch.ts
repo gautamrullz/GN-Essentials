@@ -3,12 +3,9 @@ export interface Batch {
   product_id: string;
   supplier_id: string;
   batch_number: string;
-  manufacture_date: string;
   purchase_date: string;
   expiry_date: string;
   quantity: number;
-  purchase_price: number;
-  selling_price: number;
   status: string;
   created_at: string;
 }
@@ -17,6 +14,7 @@ export interface BatchWithRelations extends Batch {
   products: {
     id: string;
     name: string;
+    purchase_price: number;
   } | null;
 
   suppliers: {
@@ -29,12 +27,9 @@ export type CreateBatchInput = {
   product_id: string;
   supplier_id: string;
   batch_number: string;
-  manufacture_date: string;
   purchase_date: string;
   expiry_date: string;
   quantity: number;
-  purchase_price: number;
-  selling_price: number;
   status: string;
 };
 
@@ -42,10 +37,11 @@ export type UpdateBatchInput = CreateBatchInput & {
   id: string;
 };
 
-export interface BatchDetails
-  extends Batch {
-  products: {
+export interface BatchDetails extends Batch {
+  products?: {
     id: string;
     name: string;
+    purchase_price: number;
+    selling_price: number;
   } | null;
 }

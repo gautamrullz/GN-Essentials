@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,6 @@ import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import { Product, UNIT_TYPES } from "@/types/product";
 
 import { Category } from "@/types/category";
-import { SubCategory } from "@/types/sub-category";
 
 interface ProductModalProps {
   open: boolean;
@@ -45,7 +44,6 @@ interface ProductModalProps {
   product?: Product;
 
   categories: Category[];
-  subCategories: SubCategory[];
 
   onSubmit: (values: ProductFormValues) => Promise<void>;
 }
@@ -55,7 +53,6 @@ export function ProductModal({
   onOpenChange,
   product,
   categories,
-  subCategories,
   onSubmit,
 }: ProductModalProps) {
   const form = useForm<ProductFormValues>({
@@ -65,9 +62,11 @@ export function ProductModal({
       name: "",
       brand: "",
       category_id: "",
-      sub_category_id: "",
+      sub_category_id: null,
       unit_type: "",
       low_stock_limit: 0,
+      purchase_price: 0,
+      selling_price: 0,
       status: "ACTIVE",
     },
   });
@@ -78,9 +77,11 @@ export function ProductModal({
         name: product.name,
         brand: product.brand ?? "",
         category_id: product.category_id,
-        sub_category_id: product.sub_category_id,
+        sub_category_id: product.sub_category_id ?? null,
         unit_type: product.unit_type,
         low_stock_limit: product.low_stock_limit,
+        purchase_price: product.purchase_price,
+        selling_price: product.selling_price,
         status: product.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
       });
     } else {
@@ -88,22 +89,15 @@ export function ProductModal({
         name: "",
         brand: "",
         category_id: "",
-        sub_category_id: "",
+        sub_category_id: null,
         unit_type: "",
         low_stock_limit: 0,
+        purchase_price: 0,
+        selling_price: 0,
         status: "ACTIVE",
       });
     }
   }, [product, form]);
-
-  const selectedCategoryId = useWatch({
-    control: form.control,
-    name: "category_id",
-  });
-
-  const filteredSubCategories = subCategories.filter(
-    (subCategory) => subCategory.category_id === selectedCategoryId,
-  );
 
   const handleSubmit = async (values: ProductFormValues) => {
     await onSubmit(values);
@@ -125,167 +119,181 @@ export function ProductModal({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Name</FormLabel>
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Product Name</FormLabel>
 
-                  <FormControl>
-                    <Input placeholder="Product Name" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="brand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand</FormLabel>
-
-                  <FormControl>
-                    <Input placeholder="Brand" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-
-                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Category" />
-                      </SelectTrigger>
+                      <Input placeholder="Product Name" {...field} />
                     </FormControl>
 
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="brand"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brand</FormLabel>
 
-            <FormField
-              control={form.control}
-              name="sub_category_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sub Category</FormLabel>
-
-                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Sub Category" />
-                      </SelectTrigger>
+                      <Input placeholder="Brand" {...field} />
                     </FormControl>
 
-                    <SelectContent>
-                      {filteredSubCategories.map((subCategory) => (
-                        <SelectItem key={subCategory.id} value={subCategory.id}>
-                          {subCategory.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="category_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
 
-            <FormField
-              control={form.control}
-              name="unit_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit Type</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                      </FormControl>
 
-                  <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="purchase_price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Purchase Price</FormLabel>
+
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Unit Type" />
-                      </SelectTrigger>
+                      <Input
+                        type="number"
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
 
-                    <SelectContent>
-                      {UNIT_TYPES.map((unit) => (
-                        <SelectItem key={unit} value={unit}>
-                          {unit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="selling_price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Selling Price</FormLabel>
 
-            <FormField
-              control={form.control}
-              name="low_stock_limit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Low Stock Limit</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="number"
-                      value={field.value}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-
-                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
+                      <Input
+                        type="number"
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
 
-                    <SelectContent>
-                      <SelectItem value="ACTIVE">Active</SelectItem>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                      <SelectItem value="INACTIVE">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <FormField
+                control={form.control}
+                name="unit_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Unit Type</FormLabel>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Unit Type" />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        {UNIT_TYPES.map((unit) => (
+                          <SelectItem key={unit} value={unit}>
+                            {unit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="low_stock_limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Low Stock Limit</FormLabel>
+
+                    <FormControl>
+                      <Input
+                        type="number"
+                        value={field.value}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+
+                        <SelectItem value="INACTIVE">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t bg-background pt-4 md:flex-row md:justify-end">
               <Button

@@ -15,6 +15,7 @@ import { supabase } from "@/lib/supabase/client";
 
 import { Profile } from "@/types/profile";
 import { Role } from "@/types/role";
+import { toast } from "sonner";
 
 type AuthContextType = {
   user: User | null;
@@ -83,6 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event === "SIGNED_OUT") {
         setUser(null);
         setProfile(null);
+
+        toast.error("Your session has expired. Please login again.");
       }
     });
 

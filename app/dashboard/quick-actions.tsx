@@ -60,7 +60,7 @@ export function QuickActions() {
           const Icon = action.icon;
 
           return (
-            <Link key={action.href} href={action.href}>
+            <Link key={action.href} href={action.href} prefetch={false}>
               <Card className="cursor-pointer transition-all hover:bg-muted/50 hover:shadow-md">
                 <CardContent>
                   <div className="flex flex-col items-center gap-2 text-center">

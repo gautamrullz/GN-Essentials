@@ -60,10 +60,12 @@ export async function createProduct(payload: CreateProductInput) {
       name: payload.name,
       brand: payload.brand || null,
       category_id: payload.category_id,
-      sub_category_id: payload.sub_category_id,
+      sub_category_id: payload.sub_category_id || null,
       unit_type: payload.unit_type,
       low_stock_limit: payload.low_stock_limit,
       status: payload.status,
+      purchase_price: payload.purchase_price,
+      selling_price: payload.selling_price,
     })
     .select()
     .single();
@@ -82,10 +84,12 @@ export async function updateProduct(payload: UpdateProductInput) {
       name: payload.name,
       brand: payload.brand || null,
       category_id: payload.category_id,
-      sub_category_id: payload.sub_category_id,
+      sub_category_id: payload.sub_category_id || null,
       unit_type: payload.unit_type,
       low_stock_limit: payload.low_stock_limit,
       status: payload.status,
+      purchase_price: payload.purchase_price,
+      selling_price: payload.selling_price,
     })
     .eq("id", payload.id)
     .select()
