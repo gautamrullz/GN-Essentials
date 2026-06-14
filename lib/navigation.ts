@@ -53,12 +53,6 @@ export const navigation: NavigationSection[] = [
         roles: ["OWNER", "MANAGER"],
       },
       {
-        title: "Sub Categories",
-        href: "/dashboard/sub-categories",
-        icon: FolderTree,
-        roles: ["OWNER", "MANAGER"],
-      },
-      {
         title: "Products",
         href: "/dashboard/products",
         icon: Package,

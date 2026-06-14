@@ -179,10 +179,6 @@ export default function BatchesPage() {
 
               <TableHead className="hidden lg:table-cell">Supplier</TableHead>
 
-              <TableHead className="hidden md:table-cell">Purchase</TableHead>
-
-              <TableHead className="hidden md:table-cell">Selling</TableHead>
-
               <TableHead className="hidden lg:table-cell">Expiry</TableHead>
 
               <TableHead>Status</TableHead>
@@ -194,7 +190,7 @@ export default function BatchesPage() {
           <TableBody>
             {filteredBatches.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9}>
+                <TableCell colSpan={7}>
                   <EmptyState title="No batches found" />
                 </TableCell>
               </TableRow>
@@ -211,9 +207,6 @@ export default function BatchesPage() {
 
                       <div className="mt-1 space-y-1 text-xs md:hidden">
                         <div>Quantity: {batch.quantity}</div>
-                        <div>Purchase: ₹{batch.purchase_price}</div>
-
-                        <div>Selling: ₹{batch.selling_price}</div>
 
                         <div>
                           Expiry:{" "}
@@ -236,14 +229,6 @@ export default function BatchesPage() {
 
                   <TableCell className="hidden lg:table-cell">
                     {batch.suppliers?.name}
-                  </TableCell>
-
-                  <TableCell className="hidden md:table-cell">
-                    ₹{batch.purchase_price}
-                  </TableCell>
-
-                  <TableCell className="hidden md:table-cell">
-                    ₹{batch.selling_price}
                   </TableCell>
 
                   <TableCell className="hidden lg:table-cell">

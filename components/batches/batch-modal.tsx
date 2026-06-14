@@ -60,15 +60,15 @@ export function BatchModal({
       product_id: "",
       supplier_id: "",
       batch_number: "",
-      manufacture_date: "",
       purchase_date: "",
       expiry_date: "",
       quantity: 0,
-      purchase_price: 0,
-      selling_price: 0,
       status: "ACTIVE",
     },
   });
+  const selectedProduct = products.find(
+    (product) => product.id === form.watch("product_id"),
+  );
 
   useEffect(() => {
     if (batch) {
@@ -76,13 +76,20 @@ export function BatchModal({
         product_id: batch.product_id,
         supplier_id: batch.supplier_id,
         batch_number: batch.batch_number,
-        manufacture_date: batch.manufacture_date,
         purchase_date: batch.purchase_date,
         expiry_date: batch.expiry_date,
         quantity: batch.quantity,
-        purchase_price: batch.purchase_price,
-        selling_price: batch.selling_price,
         status: batch.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+      });
+    } else {
+      form.reset({
+        product_id: "",
+        supplier_id: "",
+        batch_number: "",
+        purchase_date: "",
+        expiry_date: "",
+        quantity: 0,
+        status: "ACTIVE",
       });
     }
   }, [batch, form]);
@@ -121,7 +128,8 @@ export function BatchModal({
                     <SelectContent>
                       {products.map((product) => (
                         <SelectItem key={product.id} value={product.id}>
-                          {product.name}
+                          {product.name} ( ₹{product.selling_price} | ₹
+                          {product.purchase_price})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -176,7 +184,15 @@ export function BatchModal({
               )}
             />
 
-            <div className="grid grid-cols-3 gap-4">
+            {selectedProduct && (
+              <div className="rounded-md border bg-muted/50 p-3 text-sm">
+                <div>Purchase Price: ₹{selectedProduct.purchase_price}</div>
+
+                <div>Selling Price: ₹{selectedProduct.selling_price}</div>
+              </div>
+            )}
+
+            <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="quantity"
@@ -191,62 +207,6 @@ export function BatchModal({
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="purchase_price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Purchase Price</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="selling_price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Selling Price</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="manufacture_date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Manufacture Date</FormLabel>
-
-                    <Input type="date" {...field} />
 
                     <FormMessage />
                   </FormItem>

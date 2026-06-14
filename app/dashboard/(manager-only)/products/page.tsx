@@ -30,13 +30,10 @@ import {
 } from "@/lib/services/products";
 
 import { getCategories } from "@/lib/services/categories";
-import { getSubCategories } from "@/lib/services/sub-categories";
 
 import { Category } from "@/types/category";
 
 import { Product, ProductWithRelations } from "@/types/product";
-
-import { SubCategory } from "@/types/sub-category";
 
 import { ProductFormValues } from "@/lib/validations/product";
 
@@ -44,8 +41,6 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<ProductWithRelations[]>([]);
 
   const [categories, setCategories] = useState<Category[]>([]);
-
-  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 
   const [search, setSearch] = useState("");
 
@@ -56,17 +51,14 @@ export default function ProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product>();
 
   async function loadData() {
-    const [productData, categoryData, subCategoryData] = await Promise.all([
+    const [productData, categoryData] = await Promise.all([
       getProducts(),
       getCategories(),
-      getSubCategories(),
     ]);
 
     setProducts(productData ?? []);
 
     setCategories(categoryData ?? []);
-
-    setSubCategories((subCategoryData ?? []) as SubCategory[]);
   }
 
   useEffect(() => {
@@ -87,7 +79,9 @@ export default function ProductsPage() {
 
         toast.success("Product updated successfully");
       } else {
-        await createProduct(values);
+        await createProduct({
+          ...values,
+        });
 
         toast.success("Product created successfully");
       }
@@ -133,7 +127,9 @@ export default function ProductsPage() {
       product.name.toLowerCase().includes(searchValue) ||
       product.brand?.toLowerCase().includes(searchValue) ||
       product.categories?.name?.toLowerCase().includes(searchValue) ||
-      product.sub_categories?.name?.toLowerCase().includes(searchValue)
+      product.sub_categories?.name?.toLowerCase().includes(searchValue) ||
+      product.selling_price?.toString().includes(searchValue) ||
+      product.purchase_price?.toString().includes(searchValue)
     );
   });
 
@@ -178,9 +174,11 @@ export default function ProductsPage() {
               <TableHead className="hidden md:table-cell">Brand</TableHead>
 
               <TableHead className="hidden lg:table-cell">Category</TableHead>
-
               <TableHead className="hidden lg:table-cell">
-                Sub Category
+                Selling Price
+              </TableHead>
+              <TableHead className="hidden lg:table-cell">
+                Purchase Price
               </TableHead>
 
               <TableHead>Stock</TableHead>
@@ -209,6 +207,18 @@ export default function ProductsPage() {
                       <div className="text-xs text-muted-foreground md:hidden">
                         {product.brand}
                       </div>
+                      <div className="text-xs text-muted-foreground md:hidden">
+                        selling -{" "}
+                        {product.selling_price
+                          ? `₹${product.selling_price.toFixed(2)}`
+                          : "N/A"}
+                      </div>
+                      <div className="text-xs text-muted-foreground md:hidden">
+                        purchasing -{" "}
+                        {product.purchase_price
+                          ? `₹${product.purchase_price.toFixed(2)}`
+                          : "N/A"}
+                      </div>
                     </div>
                   </TableCell>
 
@@ -219,7 +229,14 @@ export default function ProductsPage() {
                     {product.categories?.name}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
-                    {product.sub_categories?.name}
+                    {product.selling_price
+                      ? `₹${product.selling_price.toFixed(2)}`
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {product.purchase_price
+                      ? `₹${product.purchase_price.toFixed(2)}`
+                      : "N/A"}
                   </TableCell>
 
                   <TableCell>
@@ -278,7 +295,6 @@ export default function ProductsPage() {
         onOpenChange={setOpen}
         product={selectedProduct}
         categories={categories}
-        subCategories={subCategories}
         onSubmit={handleSubmit}
       />
     </>

@@ -3,13 +3,15 @@ export interface Product {
   name: string;
   brand: string | null;
   category_id: string;
-  sub_category_id: string;
+  sub_category_id: string | null;
   unit_type: string;
   image_url: string | null;
   low_stock_limit: number;
   status: string;
   created_at: string;
   updated_at: string;
+  purchase_price: number;
+  selling_price: number;
 }
 
 export interface ProductWithRelations extends Product {
@@ -29,9 +31,11 @@ export type CreateProductInput = {
   name: string;
   brand?: string;
   category_id: string;
-  sub_category_id: string;
+  sub_category_id: string | null;
   unit_type: string;
   low_stock_limit: number;
+  purchase_price: number;
+  selling_price: number;
   status: string;
 };
 
@@ -40,9 +44,11 @@ export type UpdateProductInput = {
   name: string;
   brand?: string;
   category_id: string;
-  sub_category_id: string;
+  sub_category_id: string | null;
   unit_type: string;
   low_stock_limit: number;
+  purchase_price: number;
+  selling_price: number;
   status: string;
 };
 

@@ -41,7 +41,9 @@ export async function getBatchById(id: string) {
         *,
         products (
           id,
-          name
+          name,
+          purchase_price,
+          selling_price
         )
       `,
     )
@@ -89,12 +91,9 @@ export async function updateBatch(payload: UpdateBatchInput) {
       product_id: payload.product_id,
       supplier_id: payload.supplier_id,
       batch_number: payload.batch_number,
-      manufacture_date: payload.manufacture_date,
       purchase_date: payload.purchase_date,
       expiry_date: payload.expiry_date,
       quantity: payload.quantity,
-      purchase_price: payload.purchase_price,
-      selling_price: payload.selling_price,
       status: payload.status,
     })
     .eq("id", payload.id)

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/providers/auth-provider";
+import { DashboardSkeleton } from "../layout/dashboard-skeleton";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -27,11 +28,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }, [initialized, isAuthenticated, router]);
 
   if (!initialized) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Initializing...
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (!isAuthenticated) {

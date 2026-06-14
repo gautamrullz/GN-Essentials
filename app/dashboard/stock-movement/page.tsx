@@ -149,11 +149,12 @@ export default function StockMovementPage() {
 
                 <div>
                   <strong>Purchase Price:</strong> ₹
-                  {selectedBatch.purchase_price}
+                  {selectedBatch.products?.purchase_price ?? 0}
                 </div>
 
                 <div>
-                  <strong>Selling Price:</strong> ₹{selectedBatch.selling_price}
+                  <strong>Selling Price:</strong> ₹
+                  {selectedBatch.products?.selling_price ?? 0}
                 </div>
               </div>
             )}

@@ -36,11 +36,17 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     0,
   );
 
-  const inventoryValue = batches.reduce(
-    (sum, batch) =>
-      sum + Number(batch.quantity ?? 0) * Number(batch.purchase_price ?? 0),
-    0,
-  );
+  const productPriceMap = new Map<string, number>();
+
+  products.forEach((product) => {
+    productPriceMap.set(product.id, Number(product.purchase_price ?? 0));
+  });
+
+  const inventoryValue = batches.reduce((sum, batch) => {
+    const purchasePrice = productPriceMap.get(batch.product_id) ?? 0;
+
+    return sum + Number(batch.quantity ?? 0) * purchasePrice;
+  }, 0);
 
   const lowStockProducts = products.filter((product) => {
     const stock = stockMap.get(product.id) ?? 0;

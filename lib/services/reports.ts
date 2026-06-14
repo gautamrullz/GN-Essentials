@@ -8,36 +8,46 @@ import {
 
 import { InventoryTransactionWithRelations } from "@/types/transaction";
 
+type ProductRelation = {
+  name: string;
+  purchase_price: number | null;
+};
+
+type InventoryBatchRow = {
+  quantity: number;
+  batch_number: string;
+  products: ProductRelation | null;
+};
+
 export async function getInventoryValuation(): Promise<
   InventoryValuationRow[]
 > {
   const { data, error } = await supabase.from("batches").select(`
-      quantity,
-      purchase_price,
-      batch_number,
-      products (
-        name
-      )
-    `);
+    quantity,
+    batch_number,
+    products (
+      name,
+      purchase_price
+    )
+  `);
 
   if (error) {
     throw error;
   }
 
-  console.log(data);
+  const rows = (data ?? []) as unknown as InventoryBatchRow[];
 
-  return (data ?? []).map((batch) => ({
-    product_name:
-      (
-        batch.products as unknown as {
-          name: string;
-        } | null
-      )?.name ?? "Unknown",
-    batch_number: batch.batch_number,
-    quantity: Number(batch.quantity),
-    purchase_price: Number(batch.purchase_price),
-    inventory_value: Number(batch.quantity) * Number(batch.purchase_price),
-  }));
+  return rows.map((batch) => {
+    const purchasePrice = Number(batch.products?.purchase_price ?? 0);
+
+    return {
+      product_name: batch.products?.name ?? "Unknown",
+      batch_number: batch.batch_number,
+      quantity: Number(batch.quantity),
+      purchase_price: purchasePrice,
+      inventory_value: Number(batch.quantity) * purchasePrice,
+    };
+  });
 }
 
 export async function getStockReport(): Promise<StockReportRow[]> {

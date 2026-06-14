@@ -7,11 +7,15 @@ export const productSchema = z.object({
 
   category_id: z.string().min(1, "Category is required"),
 
-  sub_category_id: z.string().min(1, "Sub Category is required"),
+  sub_category_id: z.string().nullable(),
 
   unit_type: z.string().min(1, "Unit Type is required"),
 
   low_stock_limit: z.number(),
+
+  purchase_price: z.number().min(0, "Purchase price must be a positive number"),
+
+  selling_price: z.number().min(0, "Selling price must be a positive number"),
 
   status: z.enum(["ACTIVE", "INACTIVE"]),
 });
