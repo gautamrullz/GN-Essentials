@@ -22,12 +22,7 @@ import { StatusBadge } from "@/components/crud/status-badge";
 
 import { BatchModal } from "@/components/batches/batch-modal";
 
-import {
-  getBatches,
-  createBatch,
-  updateBatch,
-  deleteBatch,
-} from "@/lib/services/batches";
+import { getBatches, createBatch, updateBatch } from "@/lib/services/batches";
 
 import { getProducts } from "@/lib/services/products";
 import { getSuppliers } from "@/lib/services/suppliers";
@@ -39,6 +34,7 @@ import { Supplier } from "@/types/supplier";
 
 import { BatchFormValues } from "@/lib/validations/batch";
 import { ExpiryBadge } from "@/components/crud/expiry-badge";
+import { Switch } from "@/components/ui/switch";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -53,7 +49,7 @@ export default function BatchesPage() {
 
   const [selectedBatch, setSelectedBatch] = useState<Batch>();
 
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showActiveOnly, setShowActiveOnly] = useState(true);
 
   async function loadData() {
     const [batchData, productData, supplierData] = await Promise.all([
@@ -78,6 +74,7 @@ export default function BatchesPage() {
   }, []);
 
   async function handleSubmit(values: BatchFormValues) {
+    console.log("Submitting batch:", values);
     try {
       if (selectedBatch) {
         await updateBatch({
@@ -102,38 +99,17 @@ export default function BatchesPage() {
     }
   }
 
-  async function handleDelete(batch: Batch) {
-    const confirmed = window.confirm(`Delete batch ${batch.batch_number}?`);
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      setDeletingId(batch.id);
-
-      await deleteBatch(batch.id);
-
-      toast.success("Batch deleted successfully");
-
-      await loadData();
-    } catch (error) {
-      console.error(error);
-
-      toast.error("Failed to delete batch");
-    } finally {
-      setDeletingId(null);
-    }
-  }
-
   const filteredBatches = batches.filter((batch) => {
     const value = search.toLowerCase();
 
-    return (
+    const matchesSearch =
       batch.batch_number.toLowerCase().includes(value) ||
       batch.products?.name?.toLowerCase().includes(value) ||
-      batch.suppliers?.name?.toLowerCase().includes(value)
-    );
+      batch.suppliers?.name?.toLowerCase().includes(value);
+
+    const matchesStatus = !showActiveOnly || batch.status === "ACTIVE";
+
+    return matchesSearch && matchesStatus;
   });
 
   return (
@@ -144,7 +120,10 @@ export default function BatchesPage() {
         action={
           <div className="flex items-center gap-2">
             <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-              {batches.length} Batches
+              {batches.filter((batch) => batch.status === "ACTIVE").length}
+              {" Active / "}
+              {batches.length}
+              {" Total"}
             </div>
             <Button
               onClick={() => {
@@ -159,12 +138,21 @@ export default function BatchesPage() {
         }
       />
 
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between gap-4">
         <Input
           placeholder="Search batches..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm">Active Only</span>
+
+          <Switch
+            checked={showActiveOnly}
+            onCheckedChange={setShowActiveOnly}
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-md border">
@@ -251,15 +239,6 @@ export default function BatchesPage() {
                         }}
                       >
                         Edit
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        disabled={deletingId === batch.id}
-                        onClick={() => handleDelete(batch)}
-                      >
-                        Delete
                       </Button>
                     </div>
                   </TableCell>

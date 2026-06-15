@@ -85,6 +85,7 @@ export async function createBatch(payload: CreateBatchInput) {
 }
 
 export async function updateBatch(payload: UpdateBatchInput) {
+  console.log("hello");
   const { data, error } = await supabase
     .from("batches")
     .update({
@@ -94,7 +95,6 @@ export async function updateBatch(payload: UpdateBatchInput) {
       purchase_date: payload.purchase_date,
       expiry_date: payload.expiry_date,
       quantity: payload.quantity,
-      status: payload.status,
     })
     .eq("id", payload.id)
     .select()
@@ -105,14 +105,4 @@ export async function updateBatch(payload: UpdateBatchInput) {
   }
 
   return data;
-}
-
-export async function deleteBatch(id: string) {
-  const { error } = await supabase.from("batches").delete().eq("id", id);
-
-  if (error) {
-    throw error;
-  }
-
-  return true;
 }

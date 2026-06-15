@@ -13,7 +13,7 @@ export const batchSchema = z.object({
 
   quantity: z.number().min(1),
 
-  status: z.enum(["ACTIVE", "INACTIVE"]),
+  status: z.enum(["ACTIVE", "INACTIVE"])
 });
 
 export type BatchFormValues = z.infer<typeof batchSchema>;

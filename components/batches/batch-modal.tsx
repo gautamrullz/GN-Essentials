@@ -36,6 +36,7 @@ import { BatchFormValues, batchSchema } from "@/lib/validations/batch";
 import { Batch } from "@/types/batch";
 import { Product } from "@/types/product";
 import { Supplier } from "@/types/supplier";
+import { LoadingButton } from "../ui/loading-button";
 
 interface BatchModalProps {
   open: boolean;
@@ -44,6 +45,10 @@ interface BatchModalProps {
   products: Product[];
   suppliers: Supplier[];
   onSubmit: (values: BatchFormValues) => Promise<void>;
+}
+
+function getTodayDate(): string {
+  return new Date().toISOString().split("T")[0];
 }
 
 export function BatchModal({
@@ -60,7 +65,7 @@ export function BatchModal({
       product_id: "",
       supplier_id: "",
       batch_number: "",
-      purchase_date: "",
+      purchase_date: getTodayDate(),
       expiry_date: "",
       quantity: 0,
       status: "ACTIVE",
@@ -69,6 +74,8 @@ export function BatchModal({
   const selectedProduct = products.find(
     (product) => product.id === form.watch("product_id"),
   );
+
+  console.log(form.formState.errors);
 
   useEffect(() => {
     if (batch) {
@@ -79,14 +86,14 @@ export function BatchModal({
         purchase_date: batch.purchase_date,
         expiry_date: batch.expiry_date,
         quantity: batch.quantity,
-        status: batch.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+        status: batch.status,
       });
     } else {
       form.reset({
         product_id: "",
         supplier_id: "",
         batch_number: "",
-        purchase_date: "",
+        purchase_date: getTodayDate(),
         expiry_date: "",
         quantity: 0,
         status: "ACTIVE",
@@ -95,6 +102,7 @@ export function BatchModal({
   }, [batch, form]);
 
   async function handleSave(values: BatchFormValues) {
+    console.log("Submitting batch:", values);
     await onSubmit(values);
 
     form.reset();
@@ -111,62 +119,67 @@ export function BatchModal({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="product_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product</FormLabel>
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="product_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Product</FormLabel>
 
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Product" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Product" />
+                        </SelectTrigger>
+                      </FormControl>
 
-                    <SelectContent>
-                      {products.map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
-                          {product.name} ( ₹{product.selling_price} | ₹
-                          {product.purchase_price})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectContent>
+                        {products.map((product) => (
+                          <SelectItem
+                            key={product.id}
+                            value={product.id}
+                          >
+                            {product.name} ( ₹{product.selling_price} | ₹
+                            {product.purchase_price})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="supplier_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Supplier</FormLabel>
+              <FormField
+                control={form.control}
+                name="supplier_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Supplier</FormLabel>
 
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Supplier" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Supplier" />
+                        </SelectTrigger>
+                      </FormControl>
 
-                    <SelectContent>
-                      {suppliers.map((supplier) => (
-                        <SelectItem key={supplier.id} value={supplier.id}>
-                          {supplier.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectContent className="max-h-60 overflow-y-auto">
+                        {suppliers.map((supplier) => (
+                          <SelectItem key={supplier.id} value={supplier.id}>
+                            {supplier.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -242,32 +255,6 @@ export function BatchModal({
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      <SelectItem value="ACTIVE">Active</SelectItem>
-
-                      <SelectItem value="INACTIVE">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="flex justify-end gap-2">
               <Button
                 type="button"
@@ -277,7 +264,13 @@ export function BatchModal({
                 Cancel
               </Button>
 
-              <Button type="submit">Save Batch</Button>
+              <LoadingButton
+                type="submit"
+                loading={form.formState.isSubmitting}
+                loadingText="Saving Batch..."
+              >
+                Save Batch
+              </LoadingButton>
             </div>
           </form>
         </Form>

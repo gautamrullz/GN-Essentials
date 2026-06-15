@@ -6,7 +6,7 @@ export interface Batch {
   purchase_date: string;
   expiry_date: string;
   quantity: number;
-  status: string;
+  status: "ACTIVE" | "INACTIVE";
   created_at: string;
 }
 
@@ -30,7 +30,7 @@ export type CreateBatchInput = {
   purchase_date: string;
   expiry_date: string;
   quantity: number;
-  status: string;
+  status: "ACTIVE" | "INACTIVE";
 };
 
 export type UpdateBatchInput = CreateBatchInput & {

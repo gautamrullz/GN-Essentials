@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { supabaseAuth } from "@/lib/auth";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase/client";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +15,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function checkSession() {
@@ -31,17 +33,23 @@ export default function LoginPage() {
   }, [router]);
 
   async function login() {
-    const { error } = await supabaseAuth.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      setLoading(true);
 
-    if (error) {
-      alert(error.message);
-      return;
+      const { error } = await supabaseAuth.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      router.push("/dashboard");
+    } finally {
+      setLoading(false);
     }
-
-    router.push("/dashboard");
   }
 
   return (
@@ -62,9 +70,14 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Button className="w-full" onClick={login}>
-          Login
-        </Button>
+        <LoadingButton
+          loading={loading}
+          loadingText="Signing In..."
+          onClick={login}
+          className="w-full"
+        >
+          Sign In
+        </LoadingButton>
       </div>
     </main>
   );

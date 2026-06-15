@@ -26,6 +26,7 @@ import {
 import { categorySchema, CategoryFormValues } from "@/lib/validations/category";
 
 import { Category } from "@/types/category";
+import { LoadingButton } from "../ui/loading-button";
 
 interface CategoryModalProps {
   open: boolean;
@@ -106,9 +107,15 @@ export function CategoryModal({
                 Cancel
               </Button>
 
-              <Button type="submit">
+              <LoadingButton
+                type="submit"
+                loading={form.formState.isSubmitting}
+                loadingText={
+                  category ? "Updating Category..." : "Creating Category..."
+                }
+              >
                 {category ? "Update Category" : "Create Category"}
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </Form>
