@@ -130,9 +130,11 @@ export function BatchModal({
                       </FormControl>
 
                       <SelectContent>
-                        {products.map((product) => (
+                        {products.map((product, index) => (
                           <SelectItem key={product.id} value={product.id}>
-                            {product.name} (₹{product.purchase_price})
+                            {String(index + 1).padStart(3, "0")} -{" "}
+                            {product.name} (₹
+                            {product.purchase_price})
                           </SelectItem>
                         ))}
                       </SelectContent>
