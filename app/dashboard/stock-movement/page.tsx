@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { toast } from "sonner";
 
@@ -43,6 +43,8 @@ export default function StockMovementPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   async function loadBatches() {
     const data = await getBatches();
 
@@ -56,6 +58,22 @@ export default function StockMovementPage() {
 
     void fetchData();
   }, []);
+
+  const filteredBatches = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+
+    if (!term) {
+      return batches;
+    }
+
+    return batches.filter((batch) => {
+      const productName = batch.products?.name?.toLowerCase() ?? "";
+
+      const batchNumber = batch.batch_number.toLowerCase();
+
+      return productName.includes(term) || batchNumber.includes(term);
+    });
+  }, [batches, searchTerm]);
 
   async function handleBatchChange(batchId: string) {
     setSelectedBatchId(batchId);
@@ -94,6 +112,8 @@ export default function StockMovementPage() {
 
       setSelectedBatch(updatedBatch);
 
+      await loadBatches();
+
       setQuantity(0);
 
       setNotes("");
@@ -125,36 +145,47 @@ export default function StockMovementPage() {
 
           <CardContent>
             {!selectedBatch ? (
-              <p className="text-muted-foreground">Select a batch</p>
+              <p className="text-muted-foreground">
+                Search and select a product batch
+              </p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Product</span>
-                  <span>{selectedBatch.products?.name}</span>
+
+                  <span className="font-medium">
+                    {selectedBatch.products?.name}
+                  </span>
                 </div>
 
-                <div>
-                  <strong>Batch:</strong> {selectedBatch.batch_number}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Batch</span>
+
+                  <span>{selectedBatch.batch_number}</span>
                 </div>
 
-                <div className="rounded-md border p-3">
+                <div className="rounded-md border p-4">
                   <p className="text-sm text-muted-foreground">Current Stock</p>
 
-                  <p className="text-2xl font-bold">{selectedBatch.quantity}</p>
+                  <p className="text-3xl font-bold">{selectedBatch.quantity}</p>
                 </div>
 
-                <div>
-                  <strong>Expiry:</strong> {selectedBatch.expiry_date}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Expiry</span>
+
+                  <span>{selectedBatch.expiry_date}</span>
                 </div>
 
-                <div>
-                  <strong>Purchase Price:</strong> ₹
-                  {selectedBatch.products?.purchase_price ?? 0}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Purchase Price</span>
+
+                  <span>₹{selectedBatch.products?.purchase_price ?? 0}</span>
                 </div>
 
-                <div>
-                  <strong>Selling Price:</strong> ₹
-                  {selectedBatch.products?.selling_price ?? 0}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Selling Price</span>
+
+                  <span>₹{selectedBatch.products?.selling_price ?? 0}</span>
                 </div>
               </div>
             )}
@@ -168,6 +199,51 @@ export default function StockMovementPage() {
 
           <CardContent className="space-y-4">
             <div>
+              <label className="mb-2 block text-sm font-medium">
+                Search Product
+              </label>
+
+              <Input
+                placeholder="Search by product name or batch number..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {searchTerm.trim() && (
+              <div className="mt-2 max-h-64 overflow-y-auto rounded-md border">
+                {filteredBatches.length === 0 ? (
+                  <div className="p-3 text-sm text-muted-foreground">
+                    No matching products found
+                  </div>
+                ) : (
+                  filteredBatches.slice(0, 15).map((batch) => (
+                    <button
+                      key={batch.id}
+                      type="button"
+                      onClick={() => {
+                        void handleBatchChange(batch.id);
+
+                        setSearchTerm("");
+                      }}
+                      className="w-full border-b p-3 text-left transition-colors hover:bg-muted last:border-b-0"
+                    >
+                      <div className="font-medium">{batch.products?.name}</div>
+
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        Batch: {batch.batch_number}
+                      </div>
+
+                      <div className="text-xs text-muted-foreground">
+                        Stock: {batch.quantity}
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+
+            <div>
               <label className="mb-2 block text-sm font-medium">Batch</label>
 
               <Select value={selectedBatchId} onValueChange={handleBatchChange}>
@@ -176,15 +252,21 @@ export default function StockMovementPage() {
                 </SelectTrigger>
 
                 <SelectContent>
-                  {batches.map((batch) => (
+                  {filteredBatches.map((batch) => (
                     <SelectItem key={batch.id} value={batch.id}>
-                      {batch.batch_number}
-                      {" - "}
                       {batch.products?.name}
+                      {" • "}
+                      Stock: {batch.quantity}
+                      {" • "}
+                      {batch.batch_number}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+
+              <p className="mt-2 text-xs text-muted-foreground">
+                Showing {filteredBatches.length} batch(es)
+              </p>
             </div>
 
             <div>
@@ -217,6 +299,7 @@ export default function StockMovementPage() {
 
               <Input
                 type="number"
+                min={1}
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
@@ -233,7 +316,7 @@ export default function StockMovementPage() {
               disabled={loading}
               className="w-full"
             >
-              Save Movement
+              {loading ? "Saving..." : "Save Movement"}
             </Button>
           </CardContent>
         </Card>

@@ -64,11 +64,9 @@ export function BatchModal({
     defaultValues: {
       product_id: "",
       supplier_id: "",
-      batch_number: "",
       purchase_date: getTodayDate(),
       expiry_date: "",
       quantity: 0,
-      status: "ACTIVE",
     },
   });
   const selectedProduct = products.find(
@@ -82,21 +80,18 @@ export function BatchModal({
       form.reset({
         product_id: batch.product_id,
         supplier_id: batch.supplier_id,
-        batch_number: batch.batch_number,
         purchase_date: batch.purchase_date,
         expiry_date: batch.expiry_date,
         quantity: batch.quantity,
-        status: batch.status,
       });
     } else {
       form.reset({
         product_id: "",
         supplier_id: "",
-        batch_number: "",
+
         purchase_date: getTodayDate(),
         expiry_date: "",
         quantity: 0,
-        status: "ACTIVE",
       });
     }
   }, [batch, form]);
@@ -136,12 +131,8 @@ export function BatchModal({
 
                       <SelectContent>
                         {products.map((product) => (
-                          <SelectItem
-                            key={product.id}
-                            value={product.id}
-                          >
-                            {product.name} ( ₹{product.selling_price} | ₹
-                            {product.purchase_price})
+                          <SelectItem key={product.id} value={product.id}>
+                            {product.name} (₹{product.purchase_price})
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -180,22 +171,6 @@ export function BatchModal({
                 )}
               />
             </div>
-
-            <FormField
-              control={form.control}
-              name="batch_number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Batch Number</FormLabel>
-
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {selectedProduct && (
               <div className="rounded-md border bg-muted/50 p-3 text-sm">

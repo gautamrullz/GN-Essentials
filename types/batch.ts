@@ -26,11 +26,9 @@ export interface BatchWithRelations extends Batch {
 export type CreateBatchInput = {
   product_id: string;
   supplier_id: string;
-  batch_number: string;
   purchase_date: string;
   expiry_date: string;
   quantity: number;
-  status: "ACTIVE" | "INACTIVE";
 };
 
 export type UpdateBatchInput = CreateBatchInput & {
