@@ -27,6 +27,7 @@ import {
 } from "@/types/report";
 
 import { InventoryTransactionWithRelations } from "@/types/transaction";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function ReportsPage() {
   const [valuation, setValuation] = useState<InventoryValuationRow[]>([]);
@@ -39,8 +40,11 @@ export default function ReportsPage() {
     InventoryTransactionWithRelations[]
   >([]);
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   useEffect(() => {
     async function loadData() {
+      setPageLoading(true);
       const [valuationData, stockData, expiryData, transactionData] =
         await Promise.all([
           getInventoryValuation(),
@@ -53,6 +57,7 @@ export default function ReportsPage() {
       setStockReport(stockData);
       setExpiryReport(expiryData);
       setTransactions(transactionData);
+      setPageLoading(false);
     }
 
     void loadData();
@@ -62,6 +67,10 @@ export default function ReportsPage() {
     (sum, row) => sum + row.inventory_value,
     0,
   );
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

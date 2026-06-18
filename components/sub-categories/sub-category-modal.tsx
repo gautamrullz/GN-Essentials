@@ -38,6 +38,7 @@ import {
 
 import { Category } from "@/types/category";
 import { SubCategory } from "@/types/sub-category";
+import { LoadingButton } from "../ui/loading-button";
 
 interface SubCategoryModalProps {
   open: boolean;
@@ -154,9 +155,17 @@ export function SubCategoryModal({
                 Cancel
               </Button>
 
-              <Button type="submit">
+              <LoadingButton
+                type="submit"
+                loading={form.formState.isSubmitting}
+                loadingText={
+                  subCategory
+                    ? "Updating Sub Category..."
+                    : "Creating Sub Category..."
+                }
+              >
                 {subCategory ? "Update Sub Category" : "Create Sub Category"}
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </Form>
