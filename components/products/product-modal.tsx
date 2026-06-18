@@ -36,6 +36,7 @@ import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import { Product, UNIT_TYPES } from "@/types/product";
 
 import { Category } from "@/types/category";
+import { LoadingButton } from "../ui/loading-button";
 
 interface ProductModalProps {
   open: boolean;
@@ -161,7 +162,7 @@ export function ProductModal({
 
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
                       </FormControl>
@@ -229,7 +230,7 @@ export function ProductModal({
 
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Unit Type" />
                         </SelectTrigger>
                       </FormControl>
@@ -277,7 +278,7 @@ export function ProductModal({
 
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
@@ -305,9 +306,16 @@ export function ProductModal({
                 Cancel
               </Button>
 
-              <Button className="w-full md:w-auto" type="submit">
+              <LoadingButton
+                className="w-full md:w-auto"
+                type="submit"
+                loading={form.formState.isSubmitting}
+                loadingText={
+                  product ? "Updating Product..." : "Creating Product..."
+                }
+              >
                 {product ? "Update Product" : "Create Product"}
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </Form>

@@ -35,6 +35,7 @@ import {
 import { supplierSchema, SupplierFormValues } from "@/lib/validations/supplier";
 
 import { Supplier } from "@/types/supplier";
+import { LoadingButton } from "../ui/loading-button";
 
 interface SupplierModalProps {
   open: boolean;
@@ -200,9 +201,15 @@ export function SupplierModal({
                 Cancel
               </Button>
 
-              <Button type="submit">
+              <LoadingButton
+                type="submit"
+                loading={form.formState.isSubmitting}
+                loadingText={
+                  supplier ? "Updating Supplier..." : "Creating Supplier..."
+                }
+              >
                 {supplier ? "Update Supplier" : "Create Supplier"}
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </Form>
