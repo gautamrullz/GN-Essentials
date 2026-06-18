@@ -34,6 +34,7 @@ import { Category } from "@/types/category";
 import { SubCategory, SubCategoryWithCategory } from "@/types/sub-category";
 
 import { SubCategoryFormValues } from "@/lib/validations/sub-category";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function SubCategoriesPage() {
   const [subCategories, setSubCategories] = useState<SubCategoryWithCategory[]>(
@@ -48,15 +49,18 @@ export default function SubCategoriesPage() {
 
   const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategory>();
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadData() {
+    setPageLoading(true);
     const [subCategoryData, categoryData] = await Promise.all([
       getSubCategories(),
       getCategories(),
     ]);
 
     setSubCategories(subCategoryData ?? []);
-
     setCategories(categoryData ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -107,6 +111,10 @@ export default function SubCategoriesPage() {
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.categories?.name?.toLowerCase().includes(search.toLowerCase()),
   );
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

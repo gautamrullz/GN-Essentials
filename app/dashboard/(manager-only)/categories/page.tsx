@@ -31,6 +31,7 @@ import { Category } from "@/types/category";
 import { CategoryFormValues } from "@/lib/validations/category";
 
 import { toast } from "sonner";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -43,10 +44,14 @@ export default function CategoriesPage() {
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadCategories() {
+    setPageLoading(true);
     const data = await getCategories();
 
     setCategories(data ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -122,6 +127,10 @@ export default function CategoriesPage() {
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

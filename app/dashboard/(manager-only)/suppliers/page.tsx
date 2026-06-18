@@ -31,6 +31,7 @@ import { Supplier } from "@/types/supplier";
 
 import { SupplierFormValues } from "@/lib/validations/supplier";
 import { toast } from "sonner";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -43,10 +44,14 @@ export default function SuppliersPage() {
 
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier>();
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadSuppliers() {
+    setPageLoading(true);
     const data = await getSuppliers();
 
     setSuppliers(data ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -127,6 +132,10 @@ export default function SuppliersPage() {
       supplier.gst_number?.toLowerCase().includes(searchValue)
     );
   });
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

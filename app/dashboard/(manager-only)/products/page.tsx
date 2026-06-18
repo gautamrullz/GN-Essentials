@@ -36,6 +36,7 @@ import { Category } from "@/types/category";
 import { Product, ProductWithRelations } from "@/types/product";
 
 import { ProductFormValues } from "@/lib/validations/product";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductWithRelations[]>([]);
@@ -50,7 +51,11 @@ export default function ProductsPage() {
 
   const [selectedProduct, setSelectedProduct] = useState<Product>();
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadData() {
+    setPageLoading(true);
+
     const [productData, categoryData] = await Promise.all([
       getProducts(),
       getCategories(),
@@ -59,6 +64,7 @@ export default function ProductsPage() {
     setProducts(productData ?? []);
 
     setCategories(categoryData ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -132,6 +138,10 @@ export default function ProductsPage() {
       product.purchase_price?.toString().includes(searchValue)
     );
   });
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

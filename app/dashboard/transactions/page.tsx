@@ -19,6 +19,7 @@ import { EmptyState } from "@/components/crud/empty-state";
 import { getTransactions } from "@/lib/services/transactions";
 
 import { InventoryTransactionWithRelations } from "@/types/transaction";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<
@@ -27,10 +28,14 @@ export default function TransactionsPage() {
 
   const [search, setSearch] = useState("");
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadData() {
+    setPageLoading(true);
     const data = await getTransactions();
 
     setTransactions(data ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -48,6 +53,10 @@ export default function TransactionsPage() {
         .includes(search.toLowerCase()) ||
       transaction.products?.name?.toLowerCase().includes(search.toLowerCase()),
   );
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>

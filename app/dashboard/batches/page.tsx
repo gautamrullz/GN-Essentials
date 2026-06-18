@@ -35,6 +35,7 @@ import { Supplier } from "@/types/supplier";
 import { BatchFormValues } from "@/lib/validations/batch";
 import { ExpiryBadge } from "@/components/crud/expiry-badge";
 import { Switch } from "@/components/ui/switch";
+import { SharedSkeleton } from "@/components/shared/table-skeleton";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -51,7 +52,10 @@ export default function BatchesPage() {
 
   const [showActiveOnly, setShowActiveOnly] = useState(true);
 
+  const [pageLoading, setPageLoading] = useState(true);
+
   async function loadData() {
+    setPageLoading(true);
     const [batchData, productData, supplierData] = await Promise.all([
       getBatches(),
       getProducts(),
@@ -63,6 +67,7 @@ export default function BatchesPage() {
     setProducts(productData ?? []);
 
     setSuppliers(supplierData ?? []);
+    setPageLoading(false);
   }
 
   useEffect(() => {
@@ -111,6 +116,10 @@ export default function BatchesPage() {
 
     return matchesSearch && matchesStatus;
   });
+
+  if (pageLoading) {
+    return <SharedSkeleton />;
+  }
 
   return (
     <>
