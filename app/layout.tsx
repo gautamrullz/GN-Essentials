@@ -10,8 +10,11 @@ const manrope = Manrope({
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  title: "GN Essentials",
+export const metadata = {
+  title: {
+    default: "GN Essentials",
+    template: "%s | GN Essentials",
+  },
   description: "Inventory Management System",
 };
 
