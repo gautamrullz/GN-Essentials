@@ -12,7 +12,11 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "../ui/button";
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onNavigate?: () => void;
+}
+
+export function AppSidebar({ onNavigate }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { profile, loading } = useAuth();
@@ -79,6 +83,9 @@ export function AppSidebar() {
                       key={item.href}
                       href={item.href}
                       prefetch={false}
+                      onClick={() => {
+                        onNavigate?.();
+                      }}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                         pathname === item.href

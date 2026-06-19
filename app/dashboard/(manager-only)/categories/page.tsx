@@ -138,7 +138,7 @@ export default function CategoriesPage() {
         title="Categories"
         description="Manage product categories"
         action={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
               {categories.length} Categories
             </div>
@@ -155,54 +155,93 @@ export default function CategoriesPage() {
         />
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
+      <>
+        {/* Mobile Cards */}
+        <div className="space-y-3 md:hidden">
+          {filteredCategories.length === 0 ? (
+            <EmptyState title="No categories found" />
+          ) : (
+            filteredCategories.map((category) => (
+              <div key={category.id} className="rounded-lg border bg-card p-3">
+                <div className="mb-2">
+                  <p className="font-medium wrap-break-words">{category.name}</p>
+                </div>
 
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => handleEditCategory(category)}
+                  >
+                    Edit
+                  </Button>
 
-          <TableBody>
-            {filteredCategories.length === 0 ? (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex-1"
+                    disabled={deletingId === category.id}
+                    onClick={() => handleDelete(category)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden rounded-md border md:block">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={2}>
-                  <EmptyState title="No categories found" />
-                </TableCell>
+                <TableHead>Name</TableHead>
+
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ) : (
-              filteredCategories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell>{category.name}</TableCell>
+            </TableHeader>
 
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEditCategory(category)}
-                      >
-                        Edit
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        disabled={deletingId === category.id}
-                        onClick={() => handleDelete(category)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
+            <TableBody>
+              {filteredCategories.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={2}>
+                    <EmptyState title="No categories found" />
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ) : (
+                filteredCategories.map((category) => (
+                  <TableRow key={category.id}>
+                    <TableCell>{category.name}</TableCell>
+
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditCategory(category)}
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={deletingId === category.id}
+                          onClick={() => handleDelete(category)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </>
 
       <CategoryModal
         open={open}
