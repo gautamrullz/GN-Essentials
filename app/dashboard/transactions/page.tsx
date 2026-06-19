@@ -20,6 +20,7 @@ import { getTransactions } from "@/lib/services/transactions";
 
 import { InventoryTransactionWithRelations } from "@/types/transaction";
 import { SharedSkeleton } from "@/components/shared/table-skeleton";
+import { formatInventoryDate } from "@/lib/utils/date";
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<
@@ -123,7 +124,7 @@ export default function TransactionsPage() {
                       </div>
 
                       <div className="text-xs text-muted-foreground md:hidden">
-                        {new Date(transaction.created_at).toLocaleDateString()}
+                        {formatInventoryDate(new Date(transaction.created_at))}
                       </div>
                     </div>
                   </TableCell>
@@ -145,7 +146,7 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
-                    {new Date(transaction.created_at).toLocaleDateString()}
+                    {formatInventoryDate(new Date(transaction.created_at))}
                   </TableCell>
                 </TableRow>
               ))

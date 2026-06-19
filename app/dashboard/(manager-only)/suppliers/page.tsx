@@ -143,7 +143,7 @@ export default function SuppliersPage() {
         title="Suppliers"
         description="Manage supplier information"
         action={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
               {suppliers.length} Suppliers
             </div>
@@ -160,68 +160,121 @@ export default function SuppliersPage() {
         />
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
+      <>
+        {/* Mobile Cards */}
+        <div className="space-y-3 md:hidden">
+          {filteredSuppliers.length === 0 ? (
+            <EmptyState title="No suppliers found" />
+          ) : (
+            filteredSuppliers.map((supplier) => (
+              <div key={supplier.id} className="rounded-lg border bg-card p-4">
+                <div className="space-y-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="min-w-0 flex-1 break-words font-medium">
+                      {supplier.name}
+                    </p>
 
-              <TableHead>Phone</TableHead>
-
-              <TableHead>GST</TableHead>
-
-              <TableHead>Status</TableHead>
-
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {filteredSuppliers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5}>
-                  <EmptyState title="No suppliers found" />
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredSuppliers.map((supplier) => (
-                <TableRow key={supplier.id}>
-                  <TableCell>{supplier.name}</TableCell>
-
-                  <TableCell>{supplier.phone}</TableCell>
-
-                  <TableCell>{supplier.gst_number}</TableCell>
-
-                  <TableCell>
                     <StatusBadge status={supplier.status} />
-                  </TableCell>
+                  </div>
 
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEditSupplier(supplier)}
-                      >
-                        Edit
-                      </Button>
+                  <div className="text-sm text-muted-foreground">
+                    📞 {supplier.phone || "N/A"}
+                  </div>
 
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        disabled={deletingId === supplier.id}
-                        onClick={() => handleDelete(supplier)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
+                  <div className="wrap-break-words text-sm text-muted-foreground">
+                    GST: {supplier.gst_number || "N/A"}
+                  </div>
+                </div>
+
+                <div className="mt-2 flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => handleEditSupplier(supplier)}
+                  >
+                    Edit
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex-1"
+                    disabled={deletingId === supplier.id}
+                    onClick={() => handleDelete(supplier)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden rounded-md border md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+
+                <TableHead>Phone</TableHead>
+
+                <TableHead>GST</TableHead>
+
+                <TableHead>Status</TableHead>
+
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {filteredSuppliers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <EmptyState title="No suppliers found" />
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ) : (
+                filteredSuppliers.map((supplier) => (
+                  <TableRow key={supplier.id}>
+                    <TableCell>{supplier.name}</TableCell>
+
+                    <TableCell>{supplier.phone}</TableCell>
+
+                    <TableCell>{supplier.gst_number}</TableCell>
+
+                    <TableCell>
+                      <StatusBadge status={supplier.status} />
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditSupplier(supplier)}
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={deletingId === supplier.id}
+                          onClick={() => handleDelete(supplier)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </>
 
       <SupplierModal
         open={open}

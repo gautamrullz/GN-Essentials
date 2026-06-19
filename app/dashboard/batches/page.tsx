@@ -36,6 +36,7 @@ import { BatchFormValues } from "@/lib/validations/batch";
 import { ExpiryBadge } from "@/components/crud/expiry-badge";
 import { Switch } from "@/components/ui/switch";
 import { SharedSkeleton } from "@/components/shared/table-skeleton";
+import { formatInventoryDate } from "@/lib/utils/date";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -196,7 +197,9 @@ export default function BatchesPage() {
                 <TableRow key={batch.id}>
                   <TableCell>
                     <div>
-                      <div className="font-medium">{batch.batch_number}</div>
+                      <div className="wrap-break-words whitespace-normal font-medium">
+                        {batch.batch_number}
+                      </div>
 
                       <div className="text-xs text-muted-foreground md:hidden">
                         {batch.products?.name}
@@ -207,9 +210,7 @@ export default function BatchesPage() {
 
                         <div>
                           Expiry:{" "}
-                          {batch.expiry_date
-                            ? new Date(batch.expiry_date).toLocaleDateString()
-                            : "-"}
+                          {formatInventoryDate(batch.expiry_date)}
                         </div>
                         <ExpiryBadge expiryDate={batch.expiry_date} />
                       </div>
@@ -229,7 +230,7 @@ export default function BatchesPage() {
                   </TableCell>
 
                   <TableCell className="hidden lg:table-cell">
-                    {batch.expiry_date}
+                    {formatInventoryDate(batch.expiry_date)}
                   </TableCell>
 
                   <TableCell>

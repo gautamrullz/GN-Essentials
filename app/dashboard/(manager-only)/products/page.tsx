@@ -213,7 +213,7 @@ export default function ProductsPage() {
                 <TableRow key={product.id}>
                   <TableCell>
                     <div>
-                      <div className="break-words whitespace-normal font-medium">{product.name}</div>
+                      <div className="wrap-break-words whitespace-normal font-medium">{product.name}</div>
                       <div className="text-xs text-muted-foreground md:hidden">
                         {product.brand}
                       </div>

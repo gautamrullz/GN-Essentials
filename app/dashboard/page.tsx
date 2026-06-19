@@ -14,6 +14,7 @@ import {
 import { MetricCard } from "./metric-card";
 import { QuickActions } from "./quick-actions";
 import { useAuth } from "@/components/providers/auth-provider";
+import { MetricCardSkeleton } from "@/components/shared/metric-card-skeleton";
 
 interface DashboardMetrics {
   totalProducts: number;
@@ -33,6 +34,7 @@ export default function DashboardPage() {
     lowStockProducts: 0,
     expiringSoon: 0,
   });
+  const [loading, setLoading] = useState(true);
   const { role } = useAuth();
 
   useEffect(() => {
@@ -44,6 +46,7 @@ export default function DashboardPage() {
       console.timeEnd("dashboard-metrics");
 
       setMetrics(data);
+      setLoading(false);
     }
 
     void loadData();
@@ -64,54 +67,67 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {role !== "STAFF" && (
-          <MetricCard
-            title="Inventory Value"
-            value={`₹${metrics.inventoryValue.toFixed(2)}`}
-            href="/dashboard/reports"
-            icon={IndianRupee}
-            variant="hero"
-          />
+        {loading ? (
+          <>
+            <MetricCardSkeleton />
+            <MetricCardSkeleton />
+            <MetricCardSkeleton />
+            <MetricCardSkeleton />
+            <MetricCardSkeleton />
+            <MetricCardSkeleton />
+          </>
+        ) : (
+          <>
+            {role !== "STAFF" && (
+              <MetricCard
+                title="Inventory Value"
+                value={`₹${metrics.inventoryValue.toFixed(2)}`}
+                href="/dashboard/reports"
+                icon={IndianRupee}
+                variant="hero"
+              />
+            )}
+
+            <MetricCard
+              title="Low Stock Products"
+              value={metrics.lowStockProducts}
+              href="/dashboard/alerts/low-stock"
+              icon={AlertTriangle}
+              variant="warning"
+            />
+
+            <MetricCard
+              title="Expiring Soon"
+              value={metrics.expiringSoon}
+              href="/dashboard/alerts/expiry"
+              icon={Clock3}
+              variant="danger"
+            />
+
+            {role !== "STAFF" && (
+              <MetricCard
+                title="Total Products"
+                value={metrics.totalProducts}
+                href="/dashboard/products"
+                icon={Package}
+              />
+            )}
+
+            <MetricCard
+              title="Total Batches"
+              value={metrics.totalBatches}
+              href="/dashboard/batches"
+              icon={Boxes}
+            />
+
+            <MetricCard
+              title="Total Stock"
+              value={metrics.totalStock}
+              href="/dashboard/products"
+              icon={BarChart3}
+            />
+          </>
         )}
-
-        <MetricCard
-          title="Low Stock Products"
-          value={metrics.lowStockProducts}
-          href="/dashboard/alerts/low-stock"
-          icon={AlertTriangle}
-          variant="warning"
-        />
-
-        <MetricCard
-          title="Expiring Soon"
-          value={metrics.expiringSoon}
-          href="/dashboard/alerts/expiry"
-          icon={Clock3}
-          variant="danger"
-        />
-
-        {role !== "STAFF" && (
-          <MetricCard
-            title="Total Products"
-            value={metrics.totalProducts}
-            href="/dashboard/products"
-            icon={Package}
-          />
-        )}
-
-        <MetricCard
-          title="Total Batches"
-          value={metrics.totalBatches}
-          href="/dashboard/batches"
-          icon={Boxes}
-        />
-
-        <MetricCard
-          title="Total Stock"
-          value={metrics.totalStock}
-          href="/dashboard/products"
-          icon={BarChart3}
-        />
       </div>
     </div>
   );

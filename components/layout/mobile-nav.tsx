@@ -1,16 +1,26 @@
 "use client";
 
+import { useState } from "react";
+
 import { Menu } from "lucide-react";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import { AppSidebar } from "./app-sidebar";
 
 export function MobileNav() {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="border-b bg-background md:hidden">
       <div className="flex h-14 items-center px-4">
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <button
               type="button"
@@ -22,12 +32,11 @@ export function MobileNav() {
           </SheetTrigger>
 
           <SheetContent side="left" className="w-[85vw] max-w-[320px] p-0">
-            <div className="sr-only">
-              <h2>Navigation Menu</h2>
-              <p>Main application navigation</p>
-            </div>
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
+            </SheetHeader>
 
-            <AppSidebar />
+            <AppSidebar onNavigate={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
 
