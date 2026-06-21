@@ -8,6 +8,7 @@ import {
   BarChart3,
   ArrowLeftRight,
   TriangleAlert,
+  Calculator,
 } from "lucide-react";
 
 import { Role } from "@/types/role";
@@ -110,6 +111,18 @@ export const navigation: NavigationSection[] = [
         title: "Reports",
         href: "/dashboard/reports",
         icon: BarChart3,
+        roles: ["OWNER", "MANAGER"],
+      },
+    ],
+  },
+
+  {
+    title: "Business Tools",
+    items: [
+      {
+        title: "Business Tools",
+        href: "/dashboard/business-tools",
+        icon: Calculator,
         roles: ["OWNER", "MANAGER"],
       },
     ],

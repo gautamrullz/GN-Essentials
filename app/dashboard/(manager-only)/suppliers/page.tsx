@@ -32,6 +32,7 @@ import { Supplier } from "@/types/supplier";
 import { SupplierFormValues } from "@/lib/validations/supplier";
 import { toast } from "sonner";
 import { SharedSkeleton } from "@/components/shared/table-skeleton";
+import { Copy } from "lucide-react";
 
 export default function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -85,6 +86,16 @@ export default function SuppliersPage() {
 
       toast.error("Failed to save supplier");
     }
+  }
+
+  async function handleCopyPhone(phone: string) {
+    if (!phone) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(phone);
+
+    toast.success("Phone number copied");
   }
 
   async function handleDelete(supplier: Supplier) {
@@ -170,15 +181,30 @@ export default function SuppliersPage() {
               <div key={supplier.id} className="rounded-lg border bg-card p-4">
                 <div className="space-y-1">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="min-w-0 flex-1 break-words font-medium">
+                    <p className="min-w-0 flex-1 wrap-break-words font-medium">
                       {supplier.name}
                     </p>
 
                     <StatusBadge status={supplier.status} />
                   </div>
 
-                  <div className="text-sm text-muted-foreground">
-                    📞 {supplier.phone || "N/A"}
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      {supplier.phone || "N/A"}
+                    </span>
+
+                    {supplier.phone && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        onClick={() =>
+                          void handleCopyPhone(supplier.phone || "")
+                        }
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
                   </div>
 
                   <div className="wrap-break-words text-sm text-muted-foreground">
