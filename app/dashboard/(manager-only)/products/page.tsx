@@ -20,7 +20,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 import { StatusBadge } from "@/components/crud/status-badge";
 
-import { ProductModal } from "@/components/products/product-modal";
+import { ProductModal } from "@/components/modals/product-modal";
 
 import {
   getProducts,

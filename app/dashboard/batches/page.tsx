@@ -20,7 +20,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 import { StatusBadge } from "@/components/crud/status-badge";
 
-import { BatchModal } from "@/components/batches/batch-modal";
+import { BatchModal } from "@/components/modals/batch-modal";
 
 import { getBatches, createBatch, updateBatch } from "@/lib/services/batches";
 
@@ -209,8 +209,7 @@ export default function BatchesPage() {
                         <div>Quantity: {batch.quantity}</div>
 
                         <div>
-                          Expiry:{" "}
-                          {formatInventoryDate(batch.expiry_date)}
+                          Expiry: {formatInventoryDate(batch.expiry_date)}
                         </div>
                         <ExpiryBadge expiryDate={batch.expiry_date} />
                       </div>
@@ -222,7 +221,7 @@ export default function BatchesPage() {
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
-                    <span>{batch.quantity}</span>
+                    {batch.quantity}
                   </TableCell>
 
                   <TableCell className="hidden lg:table-cell">
