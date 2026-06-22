@@ -84,9 +84,9 @@ export function SupplierModal({
   const handleSubmit = async (values: SupplierFormValues) => {
     await onSubmit(values);
 
-    form.reset();
-
     onOpenChange(false);
+
+    form.reset();
   };
 
   return (
@@ -192,7 +192,7 @@ export function SupplierModal({
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"

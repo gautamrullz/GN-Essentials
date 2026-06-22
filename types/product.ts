@@ -12,6 +12,8 @@ export interface Product {
   updated_at: string;
   purchase_price: number;
   selling_price: number;
+  current_stock: number;
+  active_batch_count: number;
 }
 
 export interface ProductWithRelations extends Product {

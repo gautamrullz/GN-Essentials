@@ -18,7 +18,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 import { StatusBadge } from "@/components/crud/status-badge";
 
-import { SupplierModal } from "@/components/suppliers/supplier-modal";
+import { SupplierModal } from "@/components/modals/supplier-modal";
 
 import {
   getSuppliers,

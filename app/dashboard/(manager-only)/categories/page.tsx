@@ -17,7 +17,7 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/crud/empty-state";
 
-import { CategoryModal } from "@/components/categories/category-modal";
+import { CategoryModal } from "@/components/modals/category-modal";
 
 import {
   getCategories,

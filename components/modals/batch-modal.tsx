@@ -133,8 +133,7 @@ export function BatchModal({
                         {products.map((product, index) => (
                           <SelectItem key={product.id} value={product.id}>
                             {String(index + 1).padStart(3, "0")} -{" "}
-                            {product.name} (₹
-                            {product.purchase_price})
+                            {product.name} • {product.current_stock ?? 0}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -176,7 +175,19 @@ export function BatchModal({
 
             {selectedProduct && (
               <div className="rounded-md border bg-muted/50 p-3 text-sm">
-                <div>Purchase Price: ₹{selectedProduct.purchase_price}</div>
+                <div
+                  className={
+                    (selectedProduct.current_stock ?? 0) > 0
+                      ? "font-medium text-green-600"
+                      : "font-medium text-red-600"
+                  }
+                >
+                  Current Stock: {selectedProduct.current_stock ?? 0}
+                </div>
+
+                <div className="mt-2">
+                  Purchase Price: ₹{selectedProduct.purchase_price}
+                </div>
 
                 <div>Selling Price: ₹{selectedProduct.selling_price}</div>
               </div>
