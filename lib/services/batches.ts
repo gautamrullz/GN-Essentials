@@ -14,7 +14,8 @@ export async function getBatches(): Promise<BatchWithRelations[]> {
         *,
         products (
           id,
-          name
+          name,
+          inventory_type
         ),
         suppliers (
           id,
@@ -144,7 +145,6 @@ export async function createBatch(payload: CreateBatchInput) {
 }
 
 export async function updateBatch(payload: UpdateBatchInput) {
-  console.log("hello");
   const { data, error } = await supabase
     .from("batches")
     .update({
@@ -153,6 +153,7 @@ export async function updateBatch(payload: UpdateBatchInput) {
       purchase_date: payload.purchase_date,
       expiry_date: payload.expiry_date,
       quantity: payload.quantity,
+      status: payload.quantity === 0 ? "INACTIVE" : "ACTIVE",
     })
     .eq("id", payload.id)
     .select()

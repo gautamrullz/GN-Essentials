@@ -15,6 +15,7 @@ export interface BatchWithRelations extends Batch {
     id: string;
     name: string;
     purchase_price: number;
+    inventory_type: "FAST_MOVING" | "SLOW_MOVING";
   } | null;
 
   suppliers: {
@@ -41,5 +42,6 @@ export interface BatchDetails extends Batch {
     name: string;
     purchase_price: number;
     selling_price: number;
+    inventory_type: "FAST_MOVING" | "SLOW_MOVING";
   } | null;
 }

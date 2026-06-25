@@ -18,6 +18,8 @@ export const productSchema = z.object({
   selling_price: z.number().min(0, "Selling price must be a positive number"),
 
   status: z.enum(["ACTIVE", "INACTIVE"]),
+
+  inventory_type: z.enum(["STANDARD", "FAST_MOVING"]),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
