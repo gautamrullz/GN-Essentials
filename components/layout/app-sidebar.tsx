@@ -58,7 +58,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
         </p>
       </div>
 
-      <nav className="mt-2 flex-1 space-y-6 overflow-y-auto px-3 pb-6">
+      <nav className="mt-2 flex-1 space-y-4 overflow-y-auto px-3 pb-6">
         {navigation.map((section) => {
           const visibleItems = section.items.filter((item) =>
             item.roles.includes(profile.role),
@@ -70,7 +70,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
 
           return (
             <div key={section.title}>
-              <p className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+              <p className="mb-1 px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
                 {section.title}
               </p>
 

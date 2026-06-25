@@ -53,6 +53,10 @@ export default function ProductsPage() {
 
   const [pageLoading, setPageLoading] = useState(true);
 
+  const [inventoryFilter, setInventoryFilter] = useState<
+    "ALL" | "STANDARD" | "FAST_MOVING"
+  >("ALL");
+
   async function loadData() {
     setPageLoading(true);
 
@@ -129,14 +133,18 @@ export default function ProductsPage() {
   const filteredProducts = products.filter((product) => {
     const searchValue = search.toLowerCase();
 
-    return (
+    const matchesSearch =
       product.name.toLowerCase().includes(searchValue) ||
       product.brand?.toLowerCase().includes(searchValue) ||
       product.categories?.name?.toLowerCase().includes(searchValue) ||
       product.sub_categories?.name?.toLowerCase().includes(searchValue) ||
       product.selling_price?.toString().includes(searchValue) ||
-      product.purchase_price?.toString().includes(searchValue)
-    );
+      product.purchase_price?.toString().includes(searchValue);
+
+    const matchesInventoryType =
+      inventoryFilter === "ALL" || product.inventory_type === inventoryFilter;
+
+    return matchesSearch && matchesInventoryType;
   });
 
   if (pageLoading) {
@@ -166,6 +174,29 @@ export default function ProductsPage() {
           </div>
         }
       />
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Button
+          variant={inventoryFilter === "ALL" ? "default" : "outline"}
+          onClick={() => setInventoryFilter("ALL")}
+        >
+          All
+        </Button>
+
+        <Button
+          variant={inventoryFilter === "STANDARD" ? "default" : "outline"}
+          onClick={() => setInventoryFilter("STANDARD")}
+        >
+          Standard
+        </Button>
+
+        <Button
+          variant={inventoryFilter === "FAST_MOVING" ? "default" : "outline"}
+          onClick={() => setInventoryFilter("FAST_MOVING")}
+        >
+          Fast Moving
+        </Button>
+      </div>
 
       <div className="mb-4">
         <Input
@@ -213,7 +244,17 @@ export default function ProductsPage() {
                 <TableRow key={product.id}>
                   <TableCell>
                     <div>
-                      <div className="wrap-break-words whitespace-normal font-medium">{product.name}</div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="wrap-break-words whitespace-normal font-medium">
+                          {product.name}
+                        </div>
+
+                        {product.inventory_type === "FAST_MOVING" && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                            FAST
+                          </span>
+                        )}
+                      </div>
                       <div className="text-xs text-muted-foreground md:hidden">
                         {product.brand}
                       </div>

@@ -37,6 +37,15 @@ import { ExpiryBadge } from "@/components/crud/expiry-badge";
 import { Switch } from "@/components/ui/switch";
 import { SharedSkeleton } from "@/components/shared/table-skeleton";
 import { formatInventoryDate } from "@/lib/utils/date";
+import { DailyBatchModal } from "@/components/modals/daily-batch-modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SegmentedControl } from "@/components/shared/segmented-control";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<BatchWithRelations[]>([]);
@@ -54,6 +63,16 @@ export default function BatchesPage() {
   const [showActiveOnly, setShowActiveOnly] = useState(true);
 
   const [pageLoading, setPageLoading] = useState(true);
+
+  const [dailyRestockOpen, setDailyRestockOpen] = useState(false);
+
+  const [inventoryTypeFilter, setInventoryTypeFilter] = useState<
+    "ALL" | "STANDARD" | "FAST_MOVING"
+  >("ALL");
+
+  const productInventoryMap = new Map(
+    products.map((product) => [product.id, product.inventory_type]),
+  );
 
   async function loadData() {
     setPageLoading(true);
@@ -81,6 +100,7 @@ export default function BatchesPage() {
 
   async function handleSubmit(values: BatchFormValues) {
     console.log("Submitting batch:", values);
+
     try {
       if (selectedBatch) {
         await updateBatch({
@@ -98,6 +118,9 @@ export default function BatchesPage() {
       await loadData();
 
       setSelectedBatch(undefined);
+
+      // Reset modal state
+      setOpen(false);
     } catch (error) {
       console.error(error);
 
@@ -115,7 +138,12 @@ export default function BatchesPage() {
 
     const matchesStatus = !showActiveOnly || batch.status === "ACTIVE";
 
-    return matchesSearch && matchesStatus;
+    const inventoryType = productInventoryMap.get(batch.product_id);
+
+    const matchesInventory =
+      inventoryTypeFilter === "ALL" || inventoryType === inventoryTypeFilter;
+
+    return matchesSearch && matchesStatus && matchesInventory;
   });
 
   if (pageLoading) {
@@ -135,6 +163,10 @@ export default function BatchesPage() {
               {batches.length}
               {" Total"}
             </div>
+            <Button variant="outline" onClick={() => setDailyRestockOpen(true)}>
+              Daily Restock
+            </Button>
+
             <Button
               onClick={() => {
                 setSelectedBatch(undefined);
@@ -148,20 +180,44 @@ export default function BatchesPage() {
         }
       />
 
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <Input
           placeholder="Search batches..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="w-full lg:max-w-md"
         />
 
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Active Only</span>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex items-center gap-2">
+            <SegmentedControl
+              value={inventoryTypeFilter}
+              onValueChange={(value) => setInventoryTypeFilter(value)}
+              options={[
+                {
+                  label: "All",
+                  value: "ALL",
+                },
+                {
+                  label: "Standard",
+                  value: "STANDARD",
+                },
+                {
+                  label: "Fast Moving",
+                  value: "FAST_MOVING",
+                },
+              ]}
+            />
+          </div>
 
-          <Switch
-            checked={showActiveOnly}
-            onCheckedChange={setShowActiveOnly}
-          />
+          <div className="flex items-center gap-2">
+            <span className="text-sm whitespace-nowrap">Active Only</span>
+
+            <Switch
+              checked={showActiveOnly}
+              onCheckedChange={setShowActiveOnly}
+            />
+          </div>
         </div>
       </div>
 
@@ -265,6 +321,13 @@ export default function BatchesPage() {
         products={products}
         suppliers={suppliers}
         onSubmit={handleSubmit}
+      />
+      <DailyBatchModal
+        open={dailyRestockOpen}
+        onOpenChange={setDailyRestockOpen}
+        products={products}
+        suppliers={suppliers}
+        onBatchAdded={loadData}
       />
     </>
   );

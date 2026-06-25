@@ -69,6 +69,7 @@ export function ProductModal({
       purchase_price: 0,
       selling_price: 0,
       status: "ACTIVE",
+      inventory_type: "STANDARD",
     },
   });
 
@@ -84,6 +85,7 @@ export function ProductModal({
         purchase_price: product.purchase_price,
         selling_price: product.selling_price,
         status: product.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+        inventory_type: product.inventory_type,
       });
     } else {
       form.reset({
@@ -96,6 +98,7 @@ export function ProductModal({
         purchase_price: 0,
         selling_price: 0,
         status: "ACTIVE",
+        inventory_type: "STANDARD",
       });
     }
   }, [product, form]);
@@ -173,6 +176,36 @@ export function ProductModal({
                             {category.name}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="inventory_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Inventory Type</FormLabel>
+
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Unit Type" />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        <SelectItem value="STANDARD">
+                          Standard
+                        </SelectItem>
+
+                        <SelectItem value="FAST_MOVING">
+                          Fast Moving
+                        </SelectItem>
                       </SelectContent>
                     </Select>
 

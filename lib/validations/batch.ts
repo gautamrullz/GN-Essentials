@@ -9,7 +9,7 @@ export const batchSchema = z.object({
 
   expiry_date: z.string(),
 
-  quantity: z.number().min(1),
+  quantity: z.number().min(0),
 });
 
 export type BatchFormValues = z.infer<typeof batchSchema>;

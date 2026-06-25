@@ -14,6 +14,7 @@ export interface Product {
   selling_price: number;
   current_stock: number;
   active_batch_count: number;
+  inventory_type: "STANDARD" | "FAST_MOVING";
 }
 
 export interface ProductWithRelations extends Product {
@@ -39,6 +40,7 @@ export type CreateProductInput = {
   purchase_price: number;
   selling_price: number;
   status: string;
+  inventory_type: "STANDARD" | "FAST_MOVING";
 };
 
 export type UpdateProductInput = {
@@ -52,6 +54,7 @@ export type UpdateProductInput = {
   purchase_price: number;
   selling_price: number;
   status: string;
+  inventory_type: "STANDARD" | "FAST_MOVING";
 };
 
 export const UNIT_TYPES = [

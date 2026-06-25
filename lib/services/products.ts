@@ -66,6 +66,7 @@ export async function createProduct(payload: CreateProductInput) {
       status: payload.status,
       purchase_price: payload.purchase_price,
       selling_price: payload.selling_price,
+      inventory_type: payload.inventory_type,
     })
     .select()
     .single();
@@ -90,6 +91,7 @@ export async function updateProduct(payload: UpdateProductInput) {
       status: payload.status,
       purchase_price: payload.purchase_price,
       selling_price: payload.selling_price,
+      inventory_type: payload.inventory_type,
     })
     .eq("id", payload.id)
     .select()
