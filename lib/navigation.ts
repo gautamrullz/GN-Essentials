@@ -113,6 +113,12 @@ export const navigation: NavigationSection[] = [
         icon: BarChart3,
         roles: ["OWNER", "MANAGER"],
       },
+       {
+        title: "Sales",
+        href: "/dashboard/reports/sales",
+        icon: BarChart3,
+        roles: ["OWNER", "MANAGER"],
+      },
     ],
   },
 
