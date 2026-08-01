@@ -280,10 +280,11 @@ export default function SalesRecordsPage() {
       </div>
       <div className="w-full sm:flex sm:justify-end p-5">
         <SegmentedControl
-          fullWidth
-          className="sm:w-auto"
           value={viewMode}
-          onValueChange={(value) => setViewMode(value as SalesViewMode)}
+          onValueChange={(value) => {
+            setViewMode(value as SalesViewMode);
+            setSelectedDate(new Date());
+          }}
           options={[
             {
               label: "Monthly",
