@@ -38,13 +38,6 @@ import { Switch } from "@/components/ui/switch";
 import { SharedSkeleton } from "@/components/shared/table-skeleton";
 import { formatInventoryDate } from "@/lib/utils/date";
 import { DailyBatchModal } from "@/components/modals/daily-batch-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SegmentedControl } from "@/components/shared/segmented-control";
 
 export default function BatchesPage() {

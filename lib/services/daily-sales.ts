@@ -7,21 +7,14 @@ import {
 } from "@/types/daily-sales";
 
 export async function getDailySales(
-  month: number,
-  year: number,
+  startDate: string,
+  endDate: string,
 ): Promise<DailySale[]> {
-  const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
-
-  const end =
-    month === 12
-      ? `${year + 1}-01-01`
-      : `${year}-${String(month + 1).padStart(2, "0")}-01`;
-
   const { data, error } = await supabase
     .from("daily_sales")
     .select("*")
     .gte("sale_date", startDate)
-    .lt("sale_date", end)
+    .lt("sale_date", endDate)
     .order("sale_date", {
       ascending: false,
     });
@@ -77,7 +70,6 @@ export async function updateDailySale(
   id: string,
   payload: UpdateDailySaleInput,
 ) {
-  // Get existing record
   const { data: existingSale, error: fetchError } = await supabase
     .from("daily_sales")
     .select("*")
@@ -88,7 +80,6 @@ export async function updateDailySale(
     throw fetchError;
   }
 
-  // Merge existing values with updated values
   const cashAmount = payload.cash_amount ?? Number(existingSale.cash_amount);
 
   const onlineAmount =
@@ -121,10 +112,10 @@ export async function updateDailySale(
 
 export async function getLifetimeSalesSummary() {
   const { data, error } = await supabase.rpc("get_lifetime_sales_summary");
-  const summary = data?.[0];
   if (error) {
     throw error;
   }
+  const summary = data?.[0];
 
   return {
     total_sales: Number(summary?.total_sales ?? 0),

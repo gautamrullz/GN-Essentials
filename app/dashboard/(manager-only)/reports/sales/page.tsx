@@ -12,6 +12,15 @@ import { DailySalesModal } from "@/components/modals/daily-sales-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { SegmentedControl } from "@/components/shared/segmented-control";
+
+import {
+  SalesViewMode,
+  getDateRange,
+  previousPeriod,
+  nextPeriod,
+} from "@/lib/utils/date-range";
+
 import {
   Table,
   TableBody,
@@ -77,14 +86,17 @@ export default function SalesRecordsPage() {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [viewMode, setViewMode] = useState<SalesViewMode>("MONTH");
+
   const [showOverallSales, setShowOverallSales] = useState(false);
 
-  const month = selectedDate.getMonth() + 1;
-
-  const year = selectedDate.getFullYear();
+  const dateRange = getDateRange(viewMode, selectedDate);
 
   async function loadData() {
-    const salesData = await getDailySales(month, year);
+    const salesData = await getDailySales(
+      dateRange.startDate,
+      dateRange.endDate,
+    );
 
     setSales(salesData);
   }
@@ -115,6 +127,7 @@ export default function SalesRecordsPage() {
       setMonthLoading(true);
 
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, lifetimeData] = await Promise.all([
           loadData(),
           getLifetimeSalesSummary(),
@@ -127,7 +140,7 @@ export default function SalesRecordsPage() {
     }
 
     void fetchMonthData();
-  }, [selectedDate]);
+  }, [selectedDate, viewMode]);
 
   async function handleSubmit(values: DailySalesFormValues) {
     try {
@@ -141,6 +154,7 @@ export default function SalesRecordsPage() {
         toast.success("Daily sale added successfully");
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, lifetimeData] = await Promise.all([
         loadData(),
         getLifetimeSalesSummary(),
@@ -168,26 +182,18 @@ export default function SalesRecordsPage() {
   });
 
   function previousMonth() {
-    setSelectedDate((current) => {
-      const date = new Date(current);
-
-      date.setMonth(date.getMonth() - 1);
-
-      return date;
-    });
+    setSelectedDate((current) => previousPeriod(viewMode, current));
   }
 
   function nextMonth() {
-    setSelectedDate((current) => {
-      const date = new Date(current);
-
-      date.setMonth(date.getMonth() + 1);
-
-      return date;
-    });
+    setSelectedDate((current) => nextPeriod(viewMode, current));
   }
 
   function isCurrentMonth() {
+    if (viewMode === "SETTLEMENT") {
+      return false;
+    }
+
     const now = new Date();
 
     return (
@@ -272,7 +278,25 @@ export default function SalesRecordsPage() {
           </p>
         </div>
       </div>
-      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="w-full sm:flex sm:justify-end p-5">
+        <SegmentedControl
+          fullWidth
+          className="sm:w-auto"
+          value={viewMode}
+          onValueChange={(value) => setViewMode(value as SalesViewMode)}
+          options={[
+            {
+              label: "Monthly",
+              value: "MONTH",
+            },
+            {
+              label: "Cycle",
+              value: "SETTLEMENT",
+            },
+          ]}
+        />
+      </div>
+      <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <Input
           placeholder="Search notes..."
           value={search}
@@ -290,23 +314,17 @@ export default function SalesRecordsPage() {
             <ChevronLeft className="h-5 w-5" />
           </Button>
 
-          <span className="min-w-36 text-center font-semibold">
-            {selectedDate.toLocaleDateString("en-IN", {
-              month: "long",
-              year: "numeric",
-            })}
-            {monthLoading && (
-              <span className="ml-2 text-xs text-muted-foreground">
-                Loading...
-              </span>
-            )}
-          </span>
+          <div className="min-w-52 text-center">
+            <p className="text-sm font-semibold">{dateRange.title}</p>
+          </div>
 
           <Button
             variant="ghost"
             size="icon"
             onClick={nextMonth}
-            disabled={monthLoading || isCurrentMonth()}
+            disabled={
+              monthLoading || (viewMode === "MONTH" && isCurrentMonth())
+            }
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
